@@ -53,7 +53,7 @@ public class HomeFurnitureController implements Controller {
    * The properties that may be edited by the view associated to this controller. 
    */
   public enum Property {ICON, NAME, NAME_VISIBLE, DESCRIPTION, PRICE, X, Y, ELEVATION, ANGLE_IN_DEGREES, BASE_PLAN_ITEM, 
-      WIDTH, DEPTH,  HEIGHT, PROPORTIONAL, COLOR, PAINT, SHININESS, VISIBLE, MODEL_MIRRORED, LIGHT_POWER, 
+      WIDTH, DEPTH,  HEIGHT, PROPORTIONAL, COLOR, PAINT, SHININESS, VISIBLE, MODEL_MIRRORED, LIGHT_POWER,
       RESIZABLE, DEFORMABLE, TEXTURABLE}
   
   /**
@@ -953,7 +953,14 @@ public class HomeFurnitureController implements Controller {
   public Float getHeight() {
     return this.height;
   }
-  
+
+  /**
+   * Returns the volume
+   */
+  public Float getVolume() {
+    return getWidth() * getDepth() * getHeight();
+  }
+
   /**
    * Sets whether furniture proportions should be kept.
    */
@@ -1203,13 +1210,13 @@ public class HomeFurnitureController implements Controller {
         }
       }
       // Apply modification
-      doModifyFurniture(modifiedFurniture, name, nameVisible, description, price, x, y, elevation, angle, basePlanItem, width, depth, height, 
+      doModifyFurniture(modifiedFurniture, name, nameVisible, description, price, x, y, elevation, angle, basePlanItem, width, depth, height,
           paint, color, texture, modelMaterials, defaultShininess, shininess, visible, modelMirrored, lightPower);
       if (this.undoSupport != null) {
         List<Selectable> newSelection = this.home.getSelectedItems(); 
         UndoableEdit undoableEdit = new FurnitureModificationUndoableEdit(
             this.home, this.preferences, oldSelection, newSelection, modifiedFurniture, 
-            name, nameVisible, description, price, x, y, elevation, angle, basePlanItem, width, depth, height, 
+            name, nameVisible, description, price, x, y, elevation, angle, basePlanItem, width, depth, height,
             paint, color, texture, modelMaterials, defaultShininess, shininess, visible, modelMirrored, lightPower);
         this.undoSupport.postEdit(undoableEdit);
       }
@@ -1255,12 +1262,12 @@ public class HomeFurnitureController implements Controller {
     private final Float                       lightPower;
 
     private FurnitureModificationUndoableEdit(Home home,
-                                              UserPreferences preferences, 
+                                              UserPreferences preferences,
                                               List<Selectable> oldSelection,
                                               List<Selectable> newSelection,
                                               ModifiedPieceOfFurniture [] modifiedFurniture,
-                                              String name, Boolean nameVisible, String description, BigDecimal price, 
-                                              Float x, Float y, Float elevation, Float angle, Boolean basePlanItem, 
+                                              String name, Boolean nameVisible, String description, BigDecimal price,
+                                              Float x, Float y, Float elevation, Float angle, Boolean basePlanItem,
                                               Float width, Float depth, Float height,
                                               FurniturePaint paint, Integer color, HomeTexture texture,
                                               HomeMaterial [] modelMaterials,
@@ -1308,7 +1315,7 @@ public class HomeFurnitureController implements Controller {
       super.redo();
       doModifyFurniture(this.modifiedFurniture, 
           this.name, this.nameVisible, this.description, this.price, this.x, this.y, this.elevation, 
-          this.angle, this.basePlanItem, this.width, this.depth, this.height, 
+          this.angle, this.basePlanItem, this.width, this.depth, this.height,
           this.paint, this.color, this.texture, this.modelMaterials, 
           this.defaultShininess, this.shininess,
           this.visible, this.modelMirrored, this.lightPower); 
@@ -1328,7 +1335,7 @@ public class HomeFurnitureController implements Controller {
   private static void doModifyFurniture(ModifiedPieceOfFurniture [] modifiedFurniture, 
                                         String name, Boolean nameVisible, String description, BigDecimal price, 
                                         Float x, Float y, Float elevation, Float angle, Boolean basePlanItem, 
-                                        Float width, Float depth, Float height, 
+                                        Float width, Float depth, Float height,
                                         FurniturePaint paint, Integer color, HomeTexture texture, 
                                         HomeMaterial [] modelMaterials,
                                         boolean defaultShininess, Float shininess,
