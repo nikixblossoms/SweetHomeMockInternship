@@ -355,6 +355,8 @@ public class HomePane extends JRootPane implements HomeView {
             furnitureController, "toggleFurnitureSort", HomePieceOfFurniture.SortableProperty.DEPTH);
     createAction(ActionType.SORT_HOME_FURNITURE_BY_HEIGHT, preferences,
             furnitureController, "toggleFurnitureSort", HomePieceOfFurniture.SortableProperty.HEIGHT);
+    createAction(ActionType.SORT_HOME_FURNITURE_BY_VOLUME, preferences,
+            furnitureController, "toggleFurnitureSort", HomePieceOfFurniture.SortableProperty.VOLUME);
     createAction(ActionType.SORT_HOME_FURNITURE_BY_X, preferences,
             furnitureController, "toggleFurnitureSort", HomePieceOfFurniture.SortableProperty.X);
     createAction(ActionType.SORT_HOME_FURNITURE_BY_Y, preferences,
@@ -395,6 +397,8 @@ public class HomePane extends JRootPane implements HomeView {
             furnitureController, "toggleFurnitureVisibleProperty", HomePieceOfFurniture.SortableProperty.DEPTH);
     createAction(ActionType.DISPLAY_HOME_FURNITURE_HEIGHT, preferences,
             furnitureController, "toggleFurnitureVisibleProperty", HomePieceOfFurniture.SortableProperty.HEIGHT);
+    createAction(ActionType.DISPLAY_HOME_FURNITURE_VOLUME, preferences,
+            furnitureController, "toggleFurnitureVisibleProperty", HomePieceOfFurniture.SortableProperty.VOLUME);
     createAction(ActionType.DISPLAY_HOME_FURNITURE_X, preferences,
             furnitureController, "toggleFurnitureVisibleProperty", HomePieceOfFurniture.SortableProperty.X);
     createAction(ActionType.DISPLAY_HOME_FURNITURE_Y, preferences,
@@ -1324,6 +1328,8 @@ public class HomePane extends JRootPane implements HomeView {
             sortActions, HomePieceOfFurniture.SortableProperty.DEPTH);
     addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_HEIGHT,
             sortActions, HomePieceOfFurniture.SortableProperty.HEIGHT);
+    addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_VOLUME,
+            sortActions, HomePieceOfFurniture.SortableProperty.VOLUME);
     addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_X,
             sortActions, HomePieceOfFurniture.SortableProperty.X);
     addActionToMap(ActionType.SORT_HOME_FURNITURE_BY_Y,
@@ -1427,6 +1433,8 @@ public class HomePane extends JRootPane implements HomeView {
             displayPropertyActions, HomePieceOfFurniture.SortableProperty.DEPTH);
     addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_HEIGHT,
             displayPropertyActions, HomePieceOfFurniture.SortableProperty.HEIGHT);
+    addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_VOLUME,
+            displayPropertyActions, HomePieceOfFurniture.SortableProperty.VOLUME);
     addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_X,
             displayPropertyActions, HomePieceOfFurniture.SortableProperty.X);
     addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_Y,
@@ -1458,7 +1466,7 @@ public class HomePane extends JRootPane implements HomeView {
       addActionToMap(ActionType.DISPLAY_HOME_FURNITURE_PRICE_VALUE_ADDED_TAX_INCLUDED,
               displayPropertyActions, HomePieceOfFurniture.SortableProperty.PRICE_VALUE_ADDED_TAX_INCLUDED);
     }
-    // Add radio button menu items to sub menu 
+    // Add radio button menu items to sub menu
     for (Map.Entry<HomePieceOfFurniture.SortableProperty, Action> entry : displayPropertyActions.entrySet()) {
       final HomePieceOfFurniture.SortableProperty furnitureProperty = entry.getKey();
       Action displayPropertyAction = entry.getValue();
@@ -1491,7 +1499,7 @@ public class HomePane extends JRootPane implements HomeView {
             && lockBasePlanAction.getValue(Action.NAME) != null) {
       final JMenuItem lockUnlockBasePlanMenuItem = new JMenuItem(
               createLockUnlockBasePlanAction(home, popup));
-      // Add a listener to home on basePlanLocked property change to 
+      // Add a listener to home on basePlanLocked property change to
       // switch action according to basePlanLocked change
       home.addPropertyChangeListener(Home.Property.BASE_PLAN_LOCKED,
               new PropertyChangeListener() {
@@ -1536,7 +1544,7 @@ public class HomePane extends JRootPane implements HomeView {
       lockUnlockBasePlanButton.setBorderPainted(false);
       lockUnlockBasePlanButton.setContentAreaFilled(false);
       lockUnlockBasePlanButton.setFocusable(false);
-      // Add a listener to home on basePlanLocked property change to 
+      // Add a listener to home on basePlanLocked property change to
       // switch action according to basePlanLocked change
       home.addPropertyChangeListener(Home.Property.BASE_PLAN_LOCKED,
               new PropertyChangeListener() {
@@ -1570,8 +1578,8 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Creates a toggle button model that is selected when all the text of the 
-   * selected items in <code>home</code> use bold style.  
+   * Creates a toggle button model that is selected when all the text of the
+   * selected items in <code>home</code> use bold style.
    */
   private JToggleButton.ToggleButtonModel createBoldStyleToggleModel(final Home home,
                                                                      final UserPreferences preferences) {
@@ -1627,8 +1635,8 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Creates a toggle button model that is selected when all the text of the 
-   * selected items in <code>home</code> use italic style.  
+   * Creates a toggle button model that is selected when all the text of the
+   * selected items in <code>home</code> use italic style.
    */
   private JToggleButton.ToggleButtonModel createItalicStyleToggleModel(final Home home,
                                                                        final UserPreferences preferences) {
@@ -1695,7 +1703,7 @@ public class HomePane extends JRootPane implements HomeView {
             && modifyBackgroundImageAction.getValue(Action.NAME) != null) {
       final JMenuItem importModifyBackgroundImageMenuItem = new JMenuItem(
               createImportModifyBackgroundImageAction(home, popup));
-      // Add a listener to home and levels on backgroundImage property change to 
+      // Add a listener to home and levels on backgroundImage property change to
       // switch action according to backgroundImage change
       addBackgroundImageChangeListener(home, new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
@@ -1768,7 +1776,7 @@ public class HomePane extends JRootPane implements HomeView {
             && showBackgroundImageAction.getValue(Action.NAME) != null) {
       final JMenuItem hideShowBackgroundImageMenuItem = new JMenuItem(
               createHideShowBackgroundImageAction(home, popup));
-      // Add a listener to home and levels on backgroundImage property change to 
+      // Add a listener to home and levels on backgroundImage property change to
       // switch action according to backgroundImage change
       addBackgroundImageChangeListener(home, new PropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent ev) {
@@ -1878,7 +1886,7 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Updates Go to point of view menu items from the cameras stored in home. 
+   * Updates Go to point of view menu items from the cameras stored in home.
    */
   private void updateGoToPointOfViewMenu(JMenu goToPointOfViewMenu,
                                          Home home,
@@ -2029,7 +2037,7 @@ public class HomePane extends JRootPane implements HomeView {
 
     addActionToToolBar(ActionType.HELP, toolBar);
 
-    // Remove useless separators 
+    // Remove useless separators
     for (int i = toolBar.getComponentCount() - 1; i > 0; i--) {
       Component child = toolBar.getComponent(i);
       if (child instanceof JSeparator
@@ -2040,7 +2048,7 @@ public class HomePane extends JRootPane implements HomeView {
     }
 
     if (OperatingSystem.isMacOSXLeopardOrSuperior() && OperatingSystem.isJavaVersionBetween("1.7", "1.7.0_40")) {
-      // Reduce tool bar height to balance segmented buttons with higher insets 
+      // Reduce tool bar height to balance segmented buttons with higher insets
       toolBar.setPreferredSize(new Dimension(0, toolBar.getPreferredSize().height - 4));
     }
 
@@ -2048,7 +2056,7 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Adds to tool bar the button matching the given <code>actionType</code> 
+   * Adds to tool bar the button matching the given <code>actionType</code>
    * and returns <code>true</code> if it was added.
    */
   private void addToggleActionToToolBar(ActionType actionType,
@@ -2058,7 +2066,7 @@ public class HomePane extends JRootPane implements HomeView {
       Action toolBarAction = new ResourceAction.ToolBarAction(action);
       JToggleButton toggleButton;
       if (OperatingSystem.isMacOSXLeopardOrSuperior() && OperatingSystem.isJavaVersionBetween("1.7", "1.7.0_40")) {
-        // Use higher insets to ensure the top and bottom of segmented buttons are correctly drawn 
+        // Use higher insets to ensure the top and bottom of segmented buttons are correctly drawn
         toggleButton = new JToggleButton(toolBarAction) {
           @Override
           public Insets getInsets() {
@@ -2077,7 +2085,7 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Adds to tool bar the button matching the given <code>actionType</code>. 
+   * Adds to tool bar the button matching the given <code>actionType</code>.
    */
   private void addActionToToolBar(ActionType actionType,
                                   JToolBar toolBar) {
@@ -2088,12 +2096,12 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Adds to tool bar the button matching the given <code>action</code>. 
+   * Adds to tool bar the button matching the given <code>action</code>.
    */
   private void addActionToToolBar(Action action,
                                   JToolBar toolBar) {
     if (OperatingSystem.isMacOSXLeopardOrSuperior() && OperatingSystem.isJavaVersionGreaterOrEqual("1.7")) {
-      // Add a button with higher insets to ensure the top and bottom of segmented buttons are correctly drawn 
+      // Add a button with higher insets to ensure the top and bottom of segmented buttons are correctly drawn
       toolBar.add(new JButton(new ResourceAction.ToolBarAction(action)) {
         @Override
         public Insets getInsets() {
@@ -2120,7 +2128,7 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Sets the <code>NAME</code> and <code>SHORT_DESCRIPTION</code> properties value 
+   * Sets the <code>NAME</code> and <code>SHORT_DESCRIPTION</code> properties value
    * of undo and redo actions. If a parameter is null,
    * the properties will be reset to their initial values.
    */
@@ -2130,7 +2138,7 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Sets the <code>NAME</code> and <code>SHORT_DESCRIPTION</code> properties value 
+   * Sets the <code>NAME</code> and <code>SHORT_DESCRIPTION</code> properties value
    * matching <code>actionType</code>. If <code>name</code> is null,
    * the properties will be reset to their initial values.
    */
@@ -2146,7 +2154,7 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Enables or disables transfer between components.  
+   * Enables or disables transfer between components.
    */
   public void setTransferEnabled(boolean enabled) {
     boolean dragAndDropWithTransferHandlerSupported;
@@ -2221,7 +2229,7 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Returns a mouse listener for catalog that acts as catalog view, furniture view and plan transfer handlers 
+   * Returns a mouse listener for catalog that acts as catalog view, furniture view and plan transfer handlers
    * for drag and drop operations.
    */
   private MouseInputAdapter createFurnitureCatalogMouseListener() {
@@ -2410,7 +2418,7 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Returns the main pane with catalog tree, furniture table and plan pane. 
+   * Returns the main pane with catalog tree, furniture table and plan pane.
    */
   private JComponent createMainPane(Home home, UserPreferences preferences,
                                     HomeController controller) {
@@ -2432,7 +2440,7 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Configures <code>splitPane</code> divider location. 
+   * Configures <code>splitPane</code> divider location.
    * If <code>dividerLocationProperty</code> visual property exists in <code>home</code>,
    * its value will be used, otherwise the given resize weight will be used.
    */
@@ -2448,7 +2456,7 @@ public class HomePane extends JRootPane implements HomeView {
     if (!showBorder) {
       splitPane.setBorder(null);
     }
-    // Add a listener to the divider that will keep invisible components hidden when the split pane is resized 
+    // Add a listener to the divider that will keep invisible components hidden when the split pane is resized
     final PropertyChangeListener resizeWeightUpdater = new PropertyChangeListener() {
       public void propertyChange(PropertyChangeEvent ev) {
         if (splitPane.getDividerLocation() <= 0) {
@@ -2465,7 +2473,7 @@ public class HomePane extends JRootPane implements HomeView {
     };
     splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, resizeWeightUpdater);
 
-    // Restore divider location previously set 
+    // Restore divider location previously set
     Number dividerLocation = home.getNumericProperty(dividerLocationProperty);
     if (dividerLocation != null) {
       splitPane.setDividerLocation(dividerLocation.intValue());
@@ -2511,7 +2519,7 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Returns the catalog tree and furniture table pane. 
+   * Returns the catalog tree and furniture table pane.
    */
   private JComponent createCatalogFurniturePane(Home home,
                                                 UserPreferences preferences,
@@ -2620,7 +2628,7 @@ public class HomePane extends JRootPane implements HomeView {
 
   /**
    * Preferences property listener bound to this component with a weak reference to avoid
-   * strong link between preferences and this component.  
+   * strong link between preferences and this component.
    */
   private static class FurnitureCatalogViewChangeListener implements PropertyChangeListener {
     private WeakReference<HomePane>   homePane;
@@ -2661,7 +2669,7 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Returns the plan view and 3D view pane. 
+   * Returns the plan view and 3D view pane.
    */
   private JComponent createPlanView3DPane(final Home home, UserPreferences preferences,
                                           final HomeController controller) {
@@ -2685,7 +2693,7 @@ public class HomePane extends JRootPane implements HomeView {
         planViewPopup.add(selectObjectMenu);
         Action toggleObjectSelectionAction = this.menuActionMap.get(MenuActionType.TOGGLE_SELECTION_MENU);
         if (toggleObjectSelectionAction.getValue(Action.NAME) != null) {
-          // Change "Select object" menu to "Toggle object selection" when shift key is pressed 
+          // Change "Select object" menu to "Toggle object selection" when shift key is pressed
           final KeyEventDispatcher shiftKeyListener = new KeyEventDispatcher() {
             public boolean dispatchKeyEvent(KeyEvent ev) {
               selectObjectMenu.setAction(menuActionMap.get(ev.isShiftDown()
@@ -2877,7 +2885,7 @@ public class HomePane extends JRootPane implements HomeView {
                 && !detachedView3D && dividerLocation != null && dividerLocation.intValue() > 2
                 && !Boolean.getBoolean("com.eteks.sweethome3d.j3d.useOffScreen3DView")) {
           // Under Mac OS X, ensure that the 3D view of an existing home will be displayed during a while
-          // to avoid a freeze when the 3D view was saved as hidden and then the window displaying the 3D view is enlarged 
+          // to avoid a freeze when the 3D view was saved as hidden and then the window displaying the 3D view is enlarged
           // (this issue happens with on screen canvas under Java3D 1.5.2 and 1.6)
           planView3DSplitPane.addAncestorListener(new AncestorListener() {
             public void ancestorAdded(AncestorEvent event) {
@@ -2947,7 +2955,7 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Adds to the menu a listener that updates the actions that allow to 
+   * Adds to the menu a listener that updates the actions that allow to
    * add or delete points in the selected room.
    */
   private void updateRoomActions(final JMenuItem       addRoomPointMenuItem,
@@ -3027,7 +3035,7 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Adds to the menu a popup listener that will update the menu items able to select 
+   * Adds to the menu a popup listener that will update the menu items able to select
    * the selectable items in plan at the location where the menu will be triggered.
    */
   private void addSelectObjectMenuItems(final JMenu           selectObjectMenu,
@@ -3139,7 +3147,7 @@ public class HomePane extends JRootPane implements HomeView {
 
   /**
    * Preferences property listener bound to this component with a weak reference to avoid
-   * strong link between preferences and this component.  
+   * strong link between preferences and this component.
    */
   private static class RulersVisibilityChangeListener implements PropertyChangeListener {
     private WeakReference<HomePane>       homePane;
@@ -3204,8 +3212,8 @@ public class HomePane extends JRootPane implements HomeView {
         setMenusEnabled(menuBar, true);
       }
 
-      // Need to take into account focus events because a mouse released event 
-      // isn't dispatched when the component loses focus  
+      // Need to take into account focus events because a mouse released event
+      // isn't dispatched when the component loses focus
       public void focusGained(FocusEvent ev) {
         setMenusEnabled(menuBar, true);
       }
@@ -3348,21 +3356,21 @@ public class HomePane extends JRootPane implements HomeView {
       window = JOptionPane.getRootFrame();
     }
     Frame defaultFrame = (Frame)window;
-    // Create a dialog with the same title as home frame 
+    // Create a dialog with the same title as home frame
     final Window separateWindow;
     if (OperatingSystem.isMacOSX()
             && OperatingSystem.isJavaVersionGreaterOrEqual("1.7")
             && GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices().length > 1) {
       // Under Mac OS X, handle separate window with a JFrame in multiple screens environment
-      // because a separate JDialog instance displaying a 3D view jumps back to the screen 
-      // where the main window is displayed when a modification dialog is opened  
+      // because a separate JDialog instance displaying a 3D view jumps back to the screen
+      // where the main window is displayed when a modification dialog is opened
       final JFrame separateFrame = new JFrame(defaultFrame.getTitle(), defaultFrame.getGraphicsConfiguration());
       separateFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
       if (defaultFrame instanceof JFrame) {
         separateFrame.setJMenuBar(createMenuBar(this.home, this.preferences, this.controller));
       }
       try {
-        // Call Java 1.6 setIconImages by reflection to ensure the iconnable frame will have a good icon   
+        // Call Java 1.6 setIconImages by reflection to ensure the iconnable frame will have a good icon
         JFrame.class.getMethod("setIconImages", List.class).invoke(separateFrame,
                 JFrame.class.getMethod("getIconImages").invoke(defaultFrame));
       } catch (Exception ex) {
@@ -3552,7 +3560,7 @@ public class HomePane extends JRootPane implements HomeView {
 
   /**
    * Displays a dialog that lets user choose whether he wants to overwrite
-   * an existing language library or not. 
+   * an existing language library or not.
    */
   public boolean confirmReplaceLanguageLibrary(String languageLibraryName) {
     // Retrieve displayed text in buttons and message
@@ -3578,7 +3586,7 @@ public class HomePane extends JRootPane implements HomeView {
 
   /**
    * Displays a dialog that lets user choose whether he wants to overwrite
-   * an existing furniture library or not. 
+   * an existing furniture library or not.
    */
   public boolean confirmReplaceFurnitureLibrary(String furnitureLibraryName) {
     // Retrieve displayed text in buttons and message
@@ -3604,7 +3612,7 @@ public class HomePane extends JRootPane implements HomeView {
 
   /**
    * Displays a dialog that lets user choose whether he wants to overwrite
-   * an existing textures library or not. 
+   * an existing textures library or not.
    */
   public boolean confirmReplaceTexturesLibrary(String texturesLibraryName) {
     // Retrieve displayed text in buttons and message
@@ -3621,7 +3629,7 @@ public class HomePane extends JRootPane implements HomeView {
 
   /**
    * Displays a dialog that lets user choose whether he wants to overwrite
-   * an existing plug-in or not. 
+   * an existing plug-in or not.
    */
   public boolean confirmReplacePlugin(String pluginName) {
     // Retrieve displayed text in buttons and message
@@ -3664,7 +3672,7 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Displays the tip matching <code>actionTipKey</code> and 
+   * Displays the tip matching <code>actionTipKey</code> and
    * returns <code>true</code> if the user chose not to display again the tip.
    */
   public boolean showActionTipMessage(String actionTipKey) {
@@ -3754,7 +3762,7 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Displays a dialog that let user choose whether he wants to exit 
+   * Displays a dialog that let user choose whether he wants to exit
    * application or not.
    * @return <code>true</code> if user confirmed to exit.
    */
@@ -4040,17 +4048,17 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Displays the given message and returns <code>false</code> if the user 
-   * doesn't want to be informed of the shown updates anymore. 
+   * Displays the given message and returns <code>false</code> if the user
+   * doesn't want to be informed of the shown updates anymore.
    * @param updatesMessage the message to display
-   * @param showOnlyMessage if <code>false</code> a check box proposing not to display 
-   *                    again shown updates will be shown. 
+   * @param showOnlyMessage if <code>false</code> a check box proposing not to display
+   *                    again shown updates will be shown.
    */
   public boolean showUpdatesMessage(String updatesMessage,
                                     boolean showOnlyMessage) {
     if (!showOnlyMessage) {
-      // Ignore the request if a frame in the program different from the ancestor of this pane 
-      // is already showing a dialog box 
+      // Ignore the request if a frame in the program different from the ancestor of this pane
+      // is already showing a dialog box
       for (Frame frame : Frame.getFrames()) {
         if (frame != SwingUtilities.getWindowAncestor(this)) {
           for (Window window : frame.getOwnedWindows()) {
@@ -4101,10 +4109,10 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Shows a print dialog to print the home displayed by this pane.  
+   * Shows a print dialog to print the home displayed by this pane.
    * @return a print task to execute or <code>null</code> if the user canceled print.
-   *    The <code>call</code> method of the returned task may throw a 
-   *    {@link RecorderException RecorderException} exception if print failed 
+   *    The <code>call</code> method of the returned task may throw a
+   *    {@link RecorderException RecorderException} exception if print failed
    *    or an {@link InterruptedRecorderException InterruptedRecorderException}
    *    exception if it was interrupted.
    */
@@ -4148,7 +4156,7 @@ public class HomePane extends JRootPane implements HomeView {
   /**
    * Prints a home to a given PDF file. This method may be overridden
    * to write to another kind of output stream.
-   * Caution !!! This method may be called from an other thread than EDT.  
+   * Caution !!! This method may be called from an other thread than EDT.
    */
   public void printToPDF(String pdfFile) throws RecorderException {
     OutputStream outputStream = null;
@@ -4188,7 +4196,7 @@ public class HomePane extends JRootPane implements HomeView {
 
   /**
    * Exports furniture list to a given CSV file.
-   * Caution !!! This method may be called from an other thread than EDT.  
+   * Caution !!! This method may be called from an other thread than EDT.
    */
   public void exportToCSV(String csvFile) throws RecorderException {
     View furnitureView = this.controller.getFurnitureController().getView();
@@ -4235,7 +4243,7 @@ public class HomePane extends JRootPane implements HomeView {
 
   /**
    * Exports the plan objects to a given SVG file.
-   * Caution !!! This method may be called from an other thread than EDT.  
+   * Caution !!! This method may be called from an other thread than EDT.
    */
   public void exportToSVG(String svgFile) throws RecorderException {
     View planView = this.controller.getPlanController().getView();
@@ -4303,7 +4311,7 @@ public class HomePane extends JRootPane implements HomeView {
 
   /**
    * Exports the objects of the 3D view to the given OBJ file.
-   * Caution !!! This method may be called from an other thread than EDT.  
+   * Caution !!! This method may be called from an other thread than EDT.
    */
   public void exportToOBJ(String objFile) throws RecorderException {
     exportToOBJ(objFile, new Object3DBranchFactory());
@@ -4311,7 +4319,7 @@ public class HomePane extends JRootPane implements HomeView {
 
   /**
    * Exports to an OBJ file the objects of the 3D view created with the given factory.
-   * Caution !!! This method may be called from an other thread than EDT.  
+   * Caution !!! This method may be called from an other thread than EDT.
    */
   protected void exportToOBJ(String objFile, Object3DFactory object3dFactory) throws RecorderException {
     String header = this.preferences != null
@@ -4389,10 +4397,10 @@ public class HomePane extends JRootPane implements HomeView {
           }
         }
 
-        // Write 3D objects 
+        // Write 3D objects
         int i = 0;
         for (Selectable item : exportedItems) {
-          // Create a not alive new node to be able to explore its coordinates without setting capabilities 
+          // Create a not alive new node to be able to explore its coordinates without setting capabilities
           Node node = (Node)object3dFactory.createObject3D(home, item, true);
           if (node != null) {
             if (item instanceof HomePieceOfFurniture) {
@@ -4423,7 +4431,7 @@ public class HomePane extends JRootPane implements HomeView {
     }
 
     /**
-     * Returns <code>home</code> bounds. 
+     * Returns <code>home</code> bounds.
      */
     private static Rectangle2D getExportedHomeBounds(Home home) {
       // Compute bounds that include walls and furniture
@@ -4441,7 +4449,7 @@ public class HomePane extends JRootPane implements HomeView {
     }
 
     /**
-     * Returns all the visible pieces in the given <code>furniture</code>.  
+     * Returns all the visible pieces in the given <code>furniture</code>.
      */
     private static List<HomePieceOfFurniture> getVisibleFurniture(List<HomePieceOfFurniture> furniture) {
       List<HomePieceOfFurniture> visibleFurniture = new ArrayList<HomePieceOfFurniture>(furniture.size());
@@ -4482,7 +4490,7 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Displays a dialog that let user choose whether he wants to delete 
+   * Displays a dialog that let user choose whether he wants to delete
    * the selected furniture from catalog or not.
    * @return <code>true</code> if user confirmed to delete.
    */
@@ -4548,8 +4556,8 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Displays a dialog showing the list of cameras stored in home 
-   * and returns the ones selected by the user to be deleted.  
+   * Displays a dialog showing the list of cameras stored in home
+   * and returns the ones selected by the user to be deleted.
    */
   public List<Camera> showDeletedCamerasDialog() {
     // Build stored cameras list
@@ -4634,7 +4642,7 @@ public class HomePane extends JRootPane implements HomeView {
           }
         };
         flavorListener.flavorsChanged(null);
-        // Bind listener after access control check and only 
+        // Bind listener after access control check and only
         // when needed to avoid permanent link to global clipboard
         addAncestorListener(new AncestorListener() {
           public void ancestorAdded(AncestorEvent event) {
@@ -4694,8 +4702,8 @@ public class HomePane extends JRootPane implements HomeView {
   }
 
   /**
-   * Execute <code>runnable</code> asynchronously in the thread 
-   * that manages toolkit events.  
+   * Execute <code>runnable</code> asynchronously in the thread
+   * that manages toolkit events.
    */
   public void invokeLater(Runnable runnable) {
     EventQueue.invokeLater(runnable);

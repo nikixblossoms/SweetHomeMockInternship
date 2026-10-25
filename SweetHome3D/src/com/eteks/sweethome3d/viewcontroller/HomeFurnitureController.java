@@ -595,7 +595,6 @@ public class HomeFurnitureController implements Controller {
    */
   public boolean isPropertyEditable(Property property) {
     switch (property) {
-      case DESCRIPTION :
       case PRICE :
         return false;
       case LIGHT_POWER :
@@ -953,6 +952,13 @@ public class HomeFurnitureController implements Controller {
    */
   public Float getHeight() {
     return this.height;
+  }
+
+  /**
+   * Returns the volume
+   */
+  public Float getVolume() {
+    return getWidth() * getDepth() * getHeight();
   }
 
   /**
@@ -1584,7 +1590,7 @@ public class HomeFurnitureController implements Controller {
       for (int i = 0; i < groupFurniture.size(); i++) {
         HomePieceOfFurniture groupPiece = groupFurniture.get(i);
         if (group.isResizable()) {
-          // Restore group furniture location and size because resizing a group isn't reversible 
+          // Restore group furniture location and size because resizing a group isn't reversible
           groupPiece.setX(this.groupFurnitureX [i]);
           groupPiece.setY(this.groupFurnitureY [i]);
           groupPiece.setWidth(this.groupFurnitureWidth [i]);
@@ -1592,7 +1598,7 @@ public class HomeFurnitureController implements Controller {
         }
         if (group.isTexturable()
                 && !(groupPiece instanceof HomeFurnitureGroup)) {
-          // Restore group furniture color and texture 
+          // Restore group furniture color and texture
           groupPiece.setColor(this.groupFurnitureColor [i]);
           groupPiece.setTexture(this.groupFurnitureTexture [i]);
           groupPiece.setModelMaterials(this.groupFurnitureModelMaterials [i]);
@@ -1602,7 +1608,7 @@ public class HomeFurnitureController implements Controller {
     }
 
     /**
-     * Returns all the children of the given <code>furnitureGroup</code>.  
+     * Returns all the children of the given <code>furnitureGroup</code>.
      */
     private List<HomePieceOfFurniture> getGroupFurniture(HomeFurnitureGroup furnitureGroup) {
       List<HomePieceOfFurniture> pieces = new ArrayList<HomePieceOfFurniture>();

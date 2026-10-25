@@ -224,7 +224,7 @@ public class FurnitureTable extends JTable implements View, Printable {
   }
 
   /**
-   * Updates selected furniture in table from selected items in <code>home</code>. 
+   * Updates selected furniture in table from selected items in <code>home</code>.
    */
   private void updateTableSelectedFurniture(Home home) {
     ListSelectionModel selectionModel = getSelectionModel();
@@ -247,8 +247,8 @@ public class FurnitureTable extends JTable implements View, Printable {
         HomePieceOfFurniture piece = (HomePieceOfFurniture)item;
         // Search index of piece in sorted table model
         int rowIndex = tableModel.getPieceOfFurnitureIndex(piece);
-        // If the piece was found (when filtered or when the model isn't updated yet, 
-        // during the addition of a piece to home) 
+        // If the piece was found (when filtered or when the model isn't updated yet,
+        // during the addition of a piece to home)
         if (rowIndex != -1) {
           furnitureIndices [selectedFurnitureCount++] = rowIndex;
           minIndex = Math.min(minIndex, rowIndex);
@@ -280,7 +280,7 @@ public class FurnitureTable extends JTable implements View, Printable {
     if (getSelectedRowCount() != selectedFurnitureCount
             || !Arrays.equals(getSelectedRows(), furnitureIndices)) {
       deleteInformationPopup();
-      // Update table selection if it differs from selected furniture 
+      // Update table selection if it differs from selected furniture
       clearSelection();
       for (int min = 0; min < furnitureIndices.length; ) {
         // Search the interval of following indices
@@ -289,7 +289,7 @@ public class FurnitureTable extends JTable implements View, Printable {
                 && furnitureIndices [max] + 1 == furnitureIndices [max + 1]) {
           max++;
         }
-        // To avoid cycling in a group when up arrow is pressed, add selection interval with max index 
+        // To avoid cycling in a group when up arrow is pressed, add selection interval with max index
         // first to ensure the leading index is the min index (i.e. the one of the group is necessary)
         addRowSelectionInterval(furnitureIndices [max], furnitureIndices [min]);
         min = max + 1;
@@ -514,7 +514,7 @@ public class FurnitureTable extends JTable implements View, Printable {
             }
           }
         };
-        // Add a listener that will delete information popup for events outside of table        
+        // Add a listener that will delete information popup for events outside of table
         getToolkit().addAWTEventListener(this.informationPopupRemovalListener,
                 AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK
                         | AWTEvent.KEY_EVENT_MASK | AWTEvent.FOCUS_EVENT_MASK
@@ -530,7 +530,7 @@ public class FurnitureTable extends JTable implements View, Printable {
   }
 
   /**
-   * Deletes information popup from screen. 
+   * Deletes information popup from screen.
    */
   public void deleteInformationPopup() {
     if (this.furnitureInformationPopup != null) {
@@ -542,7 +542,7 @@ public class FurnitureTable extends JTable implements View, Printable {
 
   /**
    * Adds a listener to <code>preferences</code> to repaint this table
-   * and its header when unit or language changes.  
+   * and its header when unit or language changes.
    */
   private void addUserPreferencesListener(UserPreferences preferences) {
     preferences.addPropertyChangeListener(
@@ -553,7 +553,7 @@ public class FurnitureTable extends JTable implements View, Printable {
 
   /**
    * Preferences property listener bound to this table with a weak reference to avoid
-   * strong link between user preferences and this table.  
+   * strong link between user preferences and this table.
    */
   private static class UserPreferencesChangeListener implements PropertyChangeListener {
     private WeakReference<FurnitureTable>  furnitureTable;
@@ -576,8 +576,8 @@ public class FurnitureTable extends JTable implements View, Printable {
   }
 
   /**
-   * Adds <code>PropertyChange</code> and {@link FurnitureListener FurnitureListener} listeners 
-   * to home to update furniture sort in table when <code>furnitureSortedProperty</code>, 
+   * Adds <code>PropertyChange</code> and {@link FurnitureListener FurnitureListener} listeners
+   * to home to update furniture sort in table when <code>furnitureSortedProperty</code>,
    * <code>furnitureAscendingSorted</code> or furniture in <code>home</code> changes.
    */
   private void addHomeListener(final Home home,
@@ -652,7 +652,7 @@ public class FurnitureTable extends JTable implements View, Printable {
    * Ensures the rectangle which displays rows from <code>minIndex</code> to <code>maxIndex</code> is visible.
    */
   private void makeRowsVisible(int minRow, int maxRow) {
-    // Compute the rectangle that includes a row 
+    // Compute the rectangle that includes a row
     Rectangle includingRectangle = getCellRect(minRow, 0, true);
     if (minRow != maxRow) {
       includingRectangle = includingRectangle.
@@ -674,7 +674,7 @@ public class FurnitureTable extends JTable implements View, Printable {
    * Adds a mouse listener on table header that will call <code>controller</code> sort method.
    */
   private void addTableHeaderListener(final FurnitureController controller) {
-    // Sort on click in column header 
+    // Sort on click in column header
     getTableHeader().addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent ev) {
@@ -688,11 +688,11 @@ public class FurnitureTable extends JTable implements View, Printable {
   }
 
   /**
-   * Adds a listener on table column model that will call <code>controller</code> 
+   * Adds a listener on table column model that will call <code>controller</code>
    * <code>setFurnitureVisibleProperties</code> method.
    */
   private void addTableColumnModelListener(final FurnitureController controller) {
-    // Update furniture visible properties when users move table columns 
+    // Update furniture visible properties when users move table columns
     getColumnModel().addColumnModelListener(new TableColumnModelListener() {
       public void columnAdded(TableColumnModelEvent ev) {
       }
@@ -727,7 +727,7 @@ public class FurnitureTable extends JTable implements View, Printable {
    * Prints this component to make it fill <code>pageFormat</code> imageable size.
    */
   public int print(Graphics g, PageFormat pageFormat, int pageIndex) throws PrinterException {
-    // Create a printable column model from the column model of this table 
+    // Create a printable column model from the column model of this table
     // with printable renderers for each column
     DefaultTableColumnModel printableColumnModel = new DefaultTableColumnModel();
     TableColumnModel columnModel = getColumnModel();
@@ -773,7 +773,7 @@ public class FurnitureTable extends JTable implements View, Printable {
           return rendererComponent;
         }
       };
-      // Change printable column cell renderer 
+      // Change printable column cell renderer
       printableColumn.setCellRenderer(printableCellRenderer);
       // Change printable column header renderer
       printableColumn.setHeaderRenderer(printableHeaderRenderer);
@@ -869,7 +869,7 @@ public class FurnitureTable extends JTable implements View, Printable {
           throws IOException {
     TableModel model = getModel();
     HomePieceOfFurniture copiedPiece = (HomePieceOfFurniture)model.getValueAt(rowIndex, 0);
-    // Force format for sizes to always display decimals  
+    // Force format for sizes to always display decimals
     Format sizeFormat;
     if (this.preferences.getLengthUnit() == LengthUnit.INCH) {
       sizeFormat = LengthUnit.INCH_DECIMALS.getFormat();
@@ -903,7 +903,7 @@ public class FurnitureTable extends JTable implements View, Printable {
             break;
           case COLOR :
             if (copiedPiece.getColor() != null) {
-              // Copy piece color at #xxxxxx format              
+              // Copy piece color at #xxxxxx format
               writer.write("#" + Integer.toHexString(copiedPiece.getColor()).substring(2));
             }
             break;
@@ -920,6 +920,9 @@ public class FurnitureTable extends JTable implements View, Printable {
             break;
           case HEIGHT :
             writer.write(sizeFormat.format(copiedPiece.getHeight()));
+            break;
+          case VOLUME :
+            writer.write(sizeFormat.format(copiedPiece.getVolume()));
             break;
           case X :
             writer.write(sizeFormat.format(copiedPiece.getX()));
@@ -1130,6 +1133,8 @@ public class FurnitureTable extends JTable implements View, Printable {
           return preferences.getLocalizedString(FurnitureTable.class, "depthColumn");
         case HEIGHT :
           return preferences.getLocalizedString(FurnitureTable.class, "heightColumn");
+        case VOLUME :
+          return preferences.getLocalizedString(FurnitureTable.class, "volumeColumn");
         case X :
           return preferences.getLocalizedString(FurnitureTable.class, "xColumn");
         case Y :
@@ -1174,6 +1179,7 @@ public class FurnitureTable extends JTable implements View, Printable {
         case WIDTH :
         case DEPTH :
         case HEIGHT :
+        case VOLUME :
         case X :
         case Y :
         case ELEVATION :
@@ -1215,6 +1221,8 @@ public class FurnitureTable extends JTable implements View, Printable {
           return getSizeRenderer(HomePieceOfFurniture.SortableProperty.DEPTH, preferences);
         case HEIGHT :
           return getSizeRenderer(HomePieceOfFurniture.SortableProperty.HEIGHT, preferences);
+        case VOLUME :
+          return getSizeRenderer(HomePieceOfFurniture.SortableProperty.VOLUME, preferences);
         case X :
           return getSizeRenderer(HomePieceOfFurniture.SortableProperty.X, preferences);
         case Y :
@@ -1341,6 +1349,16 @@ public class FurnitureTable extends JTable implements View, Printable {
                       isSelected, hasFocus, row, column);
             }
           };
+        case VOLUME :
+          return new SizeRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table,
+                                                           Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+              return super.getTableCellRendererComponent(table,
+                      value != null  ? ((HomePieceOfFurniture)value).getVolume()  : null,
+                      isSelected, hasFocus, row, column);
+            }
+          };
         case X :
           return new SizeRenderer() {
             @Override
@@ -1377,8 +1395,8 @@ public class FurnitureTable extends JTable implements View, Printable {
     }
 
     /**
-     * Returns a renderer that converts the displayed <code>property</code> of a piece of furniture 
-     * as a price. 
+     * Returns a renderer that converts the displayed <code>property</code> of a piece of furniture
+     * as a price.
      */
     private TableCellRenderer getPriceRenderer(HomePieceOfFurniture.SortableProperty property,
                                                final UserPreferences preferences) {
@@ -1466,7 +1484,7 @@ public class FurnitureTable extends JTable implements View, Printable {
     }
 
     /**
-     * Returns a renderer that displays the angle property of a piece of furniture. 
+     * Returns a renderer that displays the angle property of a piece of furniture.
      */
     private TableCellRenderer getAngleRenderer() {
       return new DefaultTableCellRenderer() {
@@ -1489,7 +1507,7 @@ public class FurnitureTable extends JTable implements View, Printable {
     }
 
     /**
-     * Returns a renderer that displays the value added tax percentage property of a piece of furniture. 
+     * Returns a renderer that displays the value added tax percentage property of a piece of furniture.
      */
     private TableCellRenderer getValueAddedTaxPercentageRenderer() {
       return new DefaultTableCellRenderer() {
@@ -1515,13 +1533,13 @@ public class FurnitureTable extends JTable implements View, Printable {
     }
 
     /**
-     * Returns a renderer that displays the RGB value of the color property 
+     * Returns a renderer that displays the RGB value of the color property
      * of a piece of furniture in a bordered tableCellRenderer.
      */
     private TableCellRenderer getColorRenderer() {
       return new DefaultTableCellRenderer() {
-        // A square icon filled with the foreground color of its component 
-        // and surrounded by table foreground color 
+        // A square icon filled with the foreground color of its component
+        // and surrounded by table foreground color
         private Icon squareIcon = new Icon () {
           public int getIconHeight() {
             return getFont().getSize();
@@ -1567,7 +1585,7 @@ public class FurnitureTable extends JTable implements View, Printable {
     }
 
     /**
-     * Returns a renderer that displays the texture of a piece as an icon. 
+     * Returns a renderer that displays the texture of a piece as an icon.
      */
     private TableCellRenderer getTextureRenderer() {
       return new DefaultTableCellRenderer() {
@@ -1598,8 +1616,8 @@ public class FurnitureTable extends JTable implements View, Printable {
     }
 
     /**
-     * Returns a renderer that displays <code>property</code> of a piece of furniture 
-     * with <code>JTable</code> default boolean renderer. 
+     * Returns a renderer that displays <code>property</code> of a piece of furniture
+     * with <code>JTable</code> default boolean renderer.
      */
     private TableCellRenderer getBooleanRenderer(HomePieceOfFurniture.SortableProperty property) {
       // Renderer super class used to display booleans
@@ -1666,7 +1684,7 @@ public class FurnitureTable extends JTable implements View, Printable {
     }
 
     /**
-     * Returns column header renderer that displays an ascending or a descending icon 
+     * Returns column header renderer that displays an ascending or a descending icon
      * when column is sorted, beside column name.
      */
     private TableCellRenderer getHeaderRenderer(final Home home) {
@@ -1751,7 +1769,7 @@ public class FurnitureTable extends JTable implements View, Printable {
         return this.groupRendererComponent;
       } else {
         if (this.noGroupRendererComponent == null) {
-          // Use default renderer if the furniture list doesn't contain any group   
+          // Use default renderer if the furniture list doesn't contain any group
           this.nameRendererLabel = new DefaultTableCellRenderer();
           this.noGroupRendererComponent = new PanelWithInformationIcon();
           this.noGroupRendererComponent.add(this.nameRendererLabel, BorderLayout.CENTER);
@@ -2105,12 +2123,12 @@ public class FurnitureTable extends JTable implements View, Printable {
 
     @Override
     public String getColumnName(int columnIndex) {
-      // Column name is set by TableColumn instances themselves 
+      // Column name is set by TableColumn instances themselves
       return null;
     }
 
     public int getColumnCount() {
-      // Column count is set by TableColumnModel itself 
+      // Column count is set by TableColumnModel itself
       return 0;
     }
 
@@ -2124,7 +2142,7 @@ public class FurnitureTable extends JTable implements View, Printable {
     }
 
     /**
-     * Returns the index of <code>piece</code> in furniture table, or -1 if it is excluded by filter. 
+     * Returns the index of <code>piece</code> in furniture table, or -1 if it is excluded by filter.
      */
     public int getPieceOfFurnitureIndex(HomePieceOfFurniture piece) {
       return this.filteredAndSortedFurniture.indexOf(piece);
@@ -2138,8 +2156,8 @@ public class FurnitureTable extends JTable implements View, Printable {
               ? this.filteredAndSortedFurniture.size()
               : 0;
       List<HomePieceOfFurniture> furniture = this.home.getFurniture();
-      // Search if home furniture contains some not viewable furniture (no need to explore  
-      // furniture in groups because all furniture in a group belong to the same level) 
+      // Search if home furniture contains some not viewable furniture (no need to explore
+      // furniture in groups because all furniture in a group belong to the same level)
       boolean containsNotViewableFurniture = false;
       for (HomePieceOfFurniture homePiece : furniture) {
         Level level = homePiece.getLevel();
@@ -2163,7 +2181,7 @@ public class FurnitureTable extends JTable implements View, Printable {
      */
     private List<HomePieceOfFurniture> getFilteredAndSortedFurniture(List<HomePieceOfFurniture> furniture,
                                                                      boolean includeExpandedGroups) {
-      // Search furniture at viewable levels 
+      // Search furniture at viewable levels
       List<HomePieceOfFurniture> viewableFurniture = new ArrayList<HomePieceOfFurniture>(furniture.size());
       for (HomePieceOfFurniture homePiece : furniture) {
         if (homePiece.getLevel() == null
@@ -2273,7 +2291,7 @@ public class FurnitureTable extends JTable implements View, Printable {
     }
 
     /**
-     * Returns <code>true</code> if the given node is a piece of furniture. 
+     * Returns <code>true</code> if the given node is a piece of furniture.
      */
     public boolean isLeaf(Object node) {
       return node instanceof HomePieceOfFurniture

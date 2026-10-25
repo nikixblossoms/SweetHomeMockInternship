@@ -47,16 +47,16 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   private static final double TWICE_PI = 2 * Math.PI;
 
   /**
-   * The properties of a piece of furniture that may change. <code>PropertyChangeListener</code>s added 
+   * The properties of a piece of furniture that may change. <code>PropertyChangeListener</code>s added
    * to a piece of furniture will be notified under a property name equal to the string value of one these properties.
    */
   public enum Property {NAME, NAME_VISIBLE, NAME_X_OFFSET, NAME_Y_OFFSET, NAME_STYLE, NAME_ANGLE,
     DESCRIPTION, PRICE, WIDTH, DEPTH, HEIGHT, COLOR, TEXTURE, MODEL_MATERIALS, SHININESS, VISIBLE, X, Y, ELEVATION, ANGLE, MODEL_MIRRORED, MOVABLE, LEVEL};
 
   /**
-   * The properties on which home furniture may be sorted.  
+   * The properties on which home furniture may be sorted.
    */
-  public enum SortableProperty {CATALOG_ID, NAME, WIDTH, DEPTH, HEIGHT, MOVABLE,
+  public enum SortableProperty {CATALOG_ID, NAME, WIDTH, DEPTH, HEIGHT, VOLUME, MOVABLE,
     DOOR_OR_WINDOW, COLOR, TEXTURE, VISIBLE, X, Y, ELEVATION, ANGLE,
     PRICE, VALUE_ADDED_TAX, VALUE_ADDED_TAX_PERCENTAGE, PRICE_VALUE_ADDED_TAX_INCLUDED, LEVEL};
   private static final Map<SortableProperty, Comparator<HomePieceOfFurniture>> SORTABLE_PROPERTY_COMPARATORS;
@@ -105,6 +105,11 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
     SORTABLE_PROPERTY_COMPARATORS.put(SortableProperty.DEPTH, new Comparator<HomePieceOfFurniture>() {
       public int compare(HomePieceOfFurniture piece1, HomePieceOfFurniture piece2) {
         return HomePieceOfFurniture.compare(piece1.depth, piece2.depth);
+      }
+    });
+    SORTABLE_PROPERTY_COMPARATORS.put(SortableProperty.VOLUME, new Comparator<HomePieceOfFurniture>() {
+      public int compare(HomePieceOfFurniture piece1, HomePieceOfFurniture piece2) {
+        return HomePieceOfFurniture.compare(piece1.width * piece1.depth * piece1.height, piece2.width * piece2.depth * piece2.height);
       }
     });
     SORTABLE_PROPERTY_COMPARATORS.put(SortableProperty.MOVABLE, new Comparator<HomePieceOfFurniture>() {
@@ -547,7 +552,12 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Sets the height of this piece of furniture. Once this piece is updated, 
+   * Returns the volume of this piece of furniture
+   */
+  public float getVolume() { return getWidth() * getDepth() * getHeight(); }
+
+  /**
+   * Sets the height of this piece of furniture. Once this piece is updated,
    * listeners added to this piece will receive a change notification.
    * @throws IllegalStateException if this piece of furniture isn't resizable
    */
@@ -571,7 +581,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Sets the width of this piece of furniture. Once this piece is updated, 
+   * Sets the width of this piece of furniture. Once this piece is updated,
    * listeners added to this piece will receive a change notification.
    * @throws IllegalStateException if this piece of furniture isn't resizable
    */
@@ -589,7 +599,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Returns the elevation of the bottom of this piece of furniture on its level. 
+   * Returns the elevation of the bottom of this piece of furniture on its level.
    */
   public float getElevation() {
     return this.elevation;
@@ -597,7 +607,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
 
   /**
    * Returns the elevation at which should be placed an object dropped on this piece.
-   * @return a percentage of the height of this piece. A negative value means that the piece 
+   * @return a percentage of the height of this piece. A negative value means that the piece
    *         should be ignored when an object is dropped on it.
    * @since 4.4
    */
@@ -606,7 +616,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Returns the elevation of the bottom of this piece of furniture 
+   * Returns the elevation of the bottom of this piece of furniture
    * from the ground according to the elevation of its level.
    * @since 3.4
    */
@@ -619,7 +629,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Sets the elevation of this piece of furniture on its level. Once this piece is updated, 
+   * Sets the elevation of this piece of furniture on its level. Once this piece is updated,
    * listeners added to this piece will receive a change notification.
    */
   public void setElevation(float elevation) {
@@ -681,7 +691,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Sets the materials of the 3D model of this piece of furniture. 
+   * Sets the materials of the 3D model of this piece of furniture.
    * Once this piece is updated, listeners added to this piece will receive a change notification.
    * @param modelMaterials the materials of the 3D model or <code>null</code> if they shouldn't be changed
    * @throws IllegalStateException if this piece of furniture isn't texturable
@@ -702,7 +712,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
 
   /**
    * Returns the materials applied to the 3D model of this piece of furniture.
-   * @return the materials of the 3D model or <code>null</code> 
+   * @return the materials of the 3D model or <code>null</code>
    * if the individual materials of the 3D model are not modified.
    * @since 4.0
    */
@@ -723,7 +733,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Sets the color of this piece of furniture. 
+   * Sets the color of this piece of furniture.
    * Once this piece is updated, listeners added to this piece will receive a change notification.
    * @param color the color of this piece of furniture or <code>null</code> if piece color is the default one
    * @throws IllegalStateException if this piece of furniture isn't texturable
@@ -751,7 +761,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Sets the texture of this piece of furniture. 
+   * Sets the texture of this piece of furniture.
    * Once this piece is updated, listeners added to this piece will receive a change notification.
    * @param texture the texture of this piece of furniture or <code>null</code> if piece texture is the default one
    * @throws IllegalStateException if this piece of furniture isn't texturable
@@ -780,7 +790,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Sets the shininess of this piece of furniture or <code>null</code> if piece shininess is unchanged. 
+   * Sets the shininess of this piece of furniture or <code>null</code> if piece shininess is unchanged.
    * Once this piece is updated, listeners added to this piece will receive a change notification.
    * @throws IllegalStateException if this piece of furniture isn't texturable
    * @since 3.0
@@ -822,14 +832,14 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Returns the price of this piece of furniture or <code>null</code>. 
+   * Returns the price of this piece of furniture or <code>null</code>.
    */
   public BigDecimal getPrice() {
     return this.price;
   }
 
   /**
-   * Sets the price of this piece of furniture. Once this piece is updated, 
+   * Sets the price of this piece of furniture. Once this piece is updated,
    * listeners added to this piece will receive a change notification.
    * @since 4.0
    */
@@ -843,14 +853,14 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Returns the Value Added Tax percentage applied to the price of this piece of furniture. 
+   * Returns the Value Added Tax percentage applied to the price of this piece of furniture.
    */
   public BigDecimal getValueAddedTaxPercentage() {
     return this.valueAddedTaxPercentage;
   }
 
   /**
-   * Returns the Value Added Tax applied to the price of this piece of furniture. 
+   * Returns the Value Added Tax applied to the price of this piece of furniture.
    */
   public BigDecimal getValueAddedTax() {
     if (this.price != null && this.valueAddedTaxPercentage != null) {
@@ -862,7 +872,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Returns the price of this piece of furniture, Value Added Tax included. 
+   * Returns the price of this piece of furniture, Value Added Tax included.
    */
   public BigDecimal getPriceValueAddedTaxIncluded() {
     if (this.price != null && this.valueAddedTaxPercentage != null) {
@@ -873,7 +883,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Returns the price currency, noted with ISO 4217 code, or <code>null</code> 
+   * Returns the price currency, noted with ISO 4217 code, or <code>null</code>
    * if it has no price or default currency should be used.
    * @since 3.4
    */
@@ -889,7 +899,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Sets whether this piece of furniture is visible or not. Once this piece is updated, 
+   * Sets whether this piece of furniture is visible or not. Once this piece is updated,
    * listeners added to this piece will receive a change notification.
    */
   public void setVisible(boolean visible) {
@@ -907,7 +917,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Sets the abscissa of the center of this piece. Once this piece is updated, 
+   * Sets the abscissa of the center of this piece. Once this piece is updated,
    * listeners added to this piece will receive a change notification.
    */
   public void setX(float x) {
@@ -927,7 +937,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Sets the ordinate of the center of this piece. Once this piece is updated, 
+   * Sets the ordinate of the center of this piece. Once this piece is updated,
    * listeners added to this piece will receive a change notification.
    */
   public void setY(float y) {
@@ -940,14 +950,14 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Returns the angle in radians of this piece of furniture around vertical axis. 
+   * Returns the angle in radians of this piece of furniture around vertical axis.
    */
   public float getAngle() {
     return this.angle;
   }
 
   /**
-   * Sets the angle of this piece around vertical axis. Once this piece is updated, 
+   * Sets the angle of this piece around vertical axis. Once this piece is updated,
    * listeners added to this piece will receive a change notification.
    */
   public void setAngle(float angle) {
@@ -969,7 +979,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Sets whether the model of this piece of furniture is mirrored or not. Once this piece is updated, 
+   * Sets whether the model of this piece of furniture is mirrored or not. Once this piece is updated,
    * listeners added to this piece will receive a change notification.
    * @throws IllegalStateException if this piece of furniture isn't resizable
    */
@@ -986,7 +996,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Returns the rotation 3 by 3 matrix of this piece of furniture that ensures 
+   * Returns the rotation 3 by 3 matrix of this piece of furniture that ensures
    * its model is correctly oriented.
    */
   public float [][] getModelRotation() {
@@ -997,7 +1007,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Returns the shape used to cut out upper levels when they intersect with the piece   
+   * Returns the shape used to cut out upper levels when they intersect with the piece
    * like a staircase.
    * @since 3.4
    */
@@ -1022,7 +1032,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Returns the level which this piece belongs to. 
+   * Returns the level which this piece belongs to.
    * @since 3.4
    */
   public Level getLevel() {
@@ -1030,7 +1040,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Sets the level of this piece of furniture. Once this piece is updated, 
+   * Sets the level of this piece of furniture. Once this piece is updated,
    * listeners added to this piece will receive a change notification.
    * @since 3.4
    */
@@ -1043,7 +1053,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Returns <code>true</code> if this piece is at the given <code>level</code> 
+   * Returns <code>true</code> if this piece is at the given <code>level</code>
    * or at a level with the same elevation and a smaller elevation index
    * or if the elevation of its highest point is higher than <code>level</code> elevation.
    * @since 3.4
@@ -1103,7 +1113,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Returns <code>true</code> if this piece contains 
+   * Returns <code>true</code> if this piece contains
    * the point at (<code>x</code>, <code>y</code>)
    * with a given <code>margin</code>.
    */
@@ -1116,7 +1126,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Returns <code>true</code> if one of the corner of this piece is 
+   * Returns <code>true</code> if one of the corner of this piece is
    * the point at (<code>x</code>, <code>y</code>) with a given <code>margin</code>.
    */
   public boolean isPointAt(float x, float y, float margin) {
@@ -1129,8 +1139,8 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Returns <code>true</code> if the top left point of this piece is 
-   * the point at (<code>x</code>, <code>y</code>) with a given <code>margin</code>, 
+   * Returns <code>true</code> if the top left point of this piece is
+   * the point at (<code>x</code>, <code>y</code>) with a given <code>margin</code>,
    * and if that point is closer to top left point than to top right and bottom left points.
    */
   public boolean isTopLeftPointAt(float x, float y, float margin) {
@@ -1142,8 +1152,8 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Returns <code>true</code> if the top right point of this piece is 
-   * the point at (<code>x</code>, <code>y</code>) with a given <code>margin</code>, 
+   * Returns <code>true</code> if the top right point of this piece is
+   * the point at (<code>x</code>, <code>y</code>) with a given <code>margin</code>,
    * and if that point is closer to top right point than to top left and bottom right points.
    */
   public boolean isTopRightPointAt(float x, float y, float margin) {
@@ -1155,7 +1165,7 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Returns <code>true</code> if the bottom left point of this piece is 
+   * Returns <code>true</code> if the bottom left point of this piece is
    * the point at (<code>x</code>, <code>y</code>) with a given <code>margin</code>,
    * and if that point is closer to bottom left point than to top left and bottom right points.
    */
@@ -1168,8 +1178,8 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Returns <code>true</code> if the bottom right point of this piece is 
-   * the point at (<code>x</code>, <code>y</code>) with a given <code>margin</code>, 
+   * Returns <code>true</code> if the bottom right point of this piece is
+   * the point at (<code>x</code>, <code>y</code>) with a given <code>margin</code>,
    * and if that point is closer to top left point than to top right and bottom left points.
    */
   public boolean isBottomRightPointAt(float x, float y, float margin) {
@@ -1181,9 +1191,9 @@ public class HomePieceOfFurniture extends HomeObject implements PieceOfFurniture
   }
 
   /**
-   * Returns <code>true</code> if the center point at which is displayed the name 
-   * of this piece is equal to the point at (<code>x</code>, <code>y</code>) 
-   * with a given <code>margin</code>. 
+   * Returns <code>true</code> if the center point at which is displayed the name
+   * of this piece is equal to the point at (<code>x</code>, <code>y</code>)
+   * with a given <code>margin</code>.
    */
   public boolean isNameCenterPointAt(float x, float y, float margin) {
     return Math.abs(x - getX() - getNameXOffset()) <= margin

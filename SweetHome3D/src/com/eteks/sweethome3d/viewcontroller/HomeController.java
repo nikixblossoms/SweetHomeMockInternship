@@ -158,7 +158,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Creates the controller of home view. 
+   * Creates the controller of home view.
    * @param home        the home edited by this controller and its view.
    * @param preferences the preferences of the application.
    * @param viewFactory a factory able to create views.
@@ -170,7 +170,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Creates the controller of home view. 
+   * Creates the controller of home view.
    * @param home        the home edited by this controller and its view.
    * @param preferences the preferences of the application.
    * @param viewFactory a factory able to create views.
@@ -215,7 +215,7 @@ public class HomeController implements Controller {
 
       // If home version is more recent than current version
       if (home.getVersion() > Home.CURRENT_VERSION) {
-        // Warn the user that view will display a home created with a more recent version 
+        // Warn the user that view will display a home created with a more recent version
         getView().invokeLater(new Runnable() {
           public void run() {
             String message = preferences.getLocalizedString(HomeController.class,
@@ -228,7 +228,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Enables actions at controller instantiation. 
+   * Enables actions at controller instantiation.
    */
   private void enableDefaultActions(HomeView homeView) {
     boolean applicationExists = this.application != null;
@@ -255,6 +255,7 @@ public class HomeController implements Controller {
     homeView.setEnabled(HomeView.ActionType.SORT_HOME_FURNITURE_BY_NAME, true);
     homeView.setEnabled(HomeView.ActionType.SORT_HOME_FURNITURE_BY_WIDTH, true);
     homeView.setEnabled(HomeView.ActionType.SORT_HOME_FURNITURE_BY_HEIGHT, true);
+    homeView.setEnabled(HomeView.ActionType.SORT_HOME_FURNITURE_BY_VOLUME, true);
     homeView.setEnabled(HomeView.ActionType.SORT_HOME_FURNITURE_BY_DEPTH, true);
     homeView.setEnabled(HomeView.ActionType.SORT_HOME_FURNITURE_BY_X, true);
     homeView.setEnabled(HomeView.ActionType.SORT_HOME_FURNITURE_BY_Y, true);
@@ -277,6 +278,7 @@ public class HomeController implements Controller {
     homeView.setEnabled(HomeView.ActionType.DISPLAY_HOME_FURNITURE_WIDTH, true);
     homeView.setEnabled(HomeView.ActionType.DISPLAY_HOME_FURNITURE_DEPTH, true);
     homeView.setEnabled(HomeView.ActionType.DISPLAY_HOME_FURNITURE_HEIGHT, true);
+    homeView.setEnabled(HomeView.ActionType.DISPLAY_HOME_FURNITURE_VOLUME, true);
     homeView.setEnabled(HomeView.ActionType.DISPLAY_HOME_FURNITURE_X, true);
     homeView.setEnabled(HomeView.ActionType.DISPLAY_HOME_FURNITURE_Y, true);
     homeView.setEnabled(HomeView.ActionType.DISPLAY_HOME_FURNITURE_ELEVATION, true);
@@ -455,13 +457,13 @@ public class HomeController implements Controller {
    * is deleted or added in furniture or textures catalog.
    */
   private abstract static class UserPreferencesChangeListener {
-    // Stores the currently writing preferences 
+    // Stores the currently writing preferences
     private static Set<UserPreferences> writingPreferences = new HashSet<UserPreferences>();
 
     public void writePreferences(final HomeController controller) {
       if (!writingPreferences.contains(controller.preferences)) {
         writingPreferences.add(controller.preferences);
-        // Write preferences later once all catalog modifications are notified 
+        // Write preferences later once all catalog modifications are notified
         controller.getView().invokeLater(new Runnable() {
           public void run() {
             try {
@@ -478,9 +480,9 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Furniture catalog listener that writes preferences each time a piece of furniture 
-   * is deleted or added in furniture catalog. This listener is bound to this controller 
-   * with a weak reference to avoid strong link between catalog and this controller.  
+   * Furniture catalog listener that writes preferences each time a piece of furniture
+   * is deleted or added in furniture catalog. This listener is bound to this controller
+   * with a weak reference to avoid strong link between catalog and this controller.
    */
   private static class FurnitureCatalogChangeListener extends UserPreferencesChangeListener
           implements CollectionListener<CatalogPieceOfFurniture> {
@@ -502,9 +504,9 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Textures catalog listener that writes preferences each time a texture 
-   * is deleted or added in textures catalog. This listener is bound to this controller 
-   * with a weak reference to avoid strong link between catalog and this controller.  
+   * Textures catalog listener that writes preferences each time a texture
+   * is deleted or added in textures catalog. This listener is bound to this controller
+   * with a weak reference to avoid strong link between catalog and this controller.
    */
   private static class TexturesCatalogChangeListener extends UserPreferencesChangeListener
           implements CollectionListener<CatalogTexture> {
@@ -526,9 +528,9 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Properties listener that writes preferences each time the value of one of its properties changes. 
-   * This listener is bound to this controller with a weak reference to avoid strong link 
-   * between catalog and this controller.  
+   * Properties listener that writes preferences each time the value of one of its properties changes.
+   * This listener is bound to this controller with a weak reference to avoid strong link
+   * between catalog and this controller.
    */
   private static class UserPreferencesPropertiesChangeListener extends UserPreferencesChangeListener
           implements PropertyChangeListener {
@@ -572,7 +574,7 @@ public class HomeController implements Controller {
 
   /**
    * Preferences property listener bound to this component with a weak reference to avoid
-   * strong link between preferences and this component.  
+   * strong link between preferences and this component.
    */
   private static class LanguageChangeListener implements PropertyChangeListener {
     private WeakReference<HomeController> homeController;
@@ -703,9 +705,9 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Enables or disables action bound to selection. 
-   * This method will be called when selection in plan or in catalog changes and when 
-   * focused component or modification state in plan changes. 
+   * Enables or disables action bound to selection.
+   * This method will be called when selection in plan or in catalog changes and when
+   * focused component or modification state in plan changes.
    */
   protected void enableActionsBoundToSelection() {
     boolean modificationState = getPlanController().isModificationState();
@@ -742,7 +744,7 @@ public class HomeController implements Controller {
     FurnitureController furnitureController = getFurnitureController();
     if (!modificationState) {
       for (Selectable item : selectedItems) {
-        // Check item is deletable 
+        // Check item is deletable
         if (getPlanController().isItemDeletable(item)) {
           homeSelectionContainsDeletableItems = true;
           break;
@@ -751,7 +753,7 @@ public class HomeController implements Controller {
       List<HomePieceOfFurniture> selectedFurniture = Home.getFurnitureSubList(selectedItems);
       homeSelectionContainsFurniture = !selectedFurniture.isEmpty();
       for (HomePieceOfFurniture piece : selectedFurniture) {
-        // Check piece is deletable 
+        // Check piece is deletable
         if (furnitureController.isPieceOfFurnitureDeletable(piece)) {
           homeSelectionContainsDeletableFurniture = true;
           break;
@@ -915,8 +917,8 @@ public class HomeController implements Controller {
     boolean selectionMode = getPlanController() != null
             && getPlanController().getMode() == PlanController.Mode.SELECTION;
     view.setEnabled(HomeView.ActionType.ADD_ROOM_POINT, homeSelectionContainsOnlyOneRoom && selectionMode);
-    // Check minimum requirement for DELETE_ROOM_POINT action 
-    // and let home view check the coordinates of the deleted point    
+    // Check minimum requirement for DELETE_ROOM_POINT action
+    // and let home view check the coordinates of the deleted point
     view.setEnabled(HomeView.ActionType.DELETE_ROOM_POINT,
             homeSelectionContainsOnlyOneRoomWithFourPointsOrMore && selectionMode);
   }
@@ -939,7 +941,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Enables paste to group action if clipboard contains furniture and 
+   * Enables paste to group action if clipboard contains furniture and
    * home selected item is a furniture group.
    */
   private void enablePasteToGroupAction() {
@@ -970,7 +972,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Enables clipboard paste style action if selection contains some items of a class 
+   * Enables clipboard paste style action if selection contains some items of a class
    * compatible with the clipboard item.
    */
   private void enablePasteStyleAction() {
@@ -1176,7 +1178,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Adds a property change listener to plan controller to 
+   * Adds a property change listener to plan controller to
    * enable/disable authorized actions according to its modification state and the plan scale.
    */
   private void addPlanControllerListeners() {
@@ -1212,7 +1214,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Adds the selected furniture in catalog to home and selects it.  
+   * Adds the selected furniture in catalog to home and selects it.
    */
   public void addHomeFurniture() {
     addFurniture(null);
@@ -1227,7 +1229,7 @@ public class HomeController implements Controller {
   }
 
   private void addFurniture(HomeFurnitureGroup group) {
-    // Use automatically selection mode  
+    // Use automatically selection mode
     getPlanController().setMode(PlanController.Mode.SELECTION);
     List<CatalogPieceOfFurniture> selectedFurniture =
             getFurnitureCatalogController().getSelectedFurniture();
@@ -1248,7 +1250,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Modifies the selected furniture of the focused view.  
+   * Modifies the selected furniture of the focused view.
    */
   public void modifySelectedFurniture() {
     if (this.focusedView == getFurnitureCatalogController().getView()) {
@@ -1261,7 +1263,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Imports a language library chosen by the user.  
+   * Imports a language library chosen by the user.
    */
   public void importLanguageLibrary() {
     getView().invokeLater(new Runnable() {
@@ -1275,7 +1277,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Imports a given language library. 
+   * Imports a given language library.
    */
   public void importLanguageLibrary(String languageLibraryName) {
     try {
@@ -1291,7 +1293,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Imports furniture to the catalog or home depending on the focused view.  
+   * Imports furniture to the catalog or home depending on the focused view.
    */
   public void importFurniture() {
     // Always use selection mode after an import furniture operation
@@ -1304,7 +1306,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Imports a furniture library chosen by the user.  
+   * Imports a furniture library chosen by the user.
    */
   public void importFurnitureLibrary() {
     getView().invokeLater(new Runnable() {
@@ -1318,7 +1320,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Imports a given furniture library. 
+   * Imports a given furniture library.
    */
   public void importFurnitureLibrary(String furnitureLibraryName) {
     try {
@@ -1336,7 +1338,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Imports a texture to the texture catalog.  
+   * Imports a texture to the texture catalog.
    * @since 4.0
    */
   public void importTexture() {
@@ -1345,7 +1347,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Imports a textures library chosen by the user.  
+   * Imports a textures library chosen by the user.
    */
   public void importTexturesLibrary() {
     getView().invokeLater(new Runnable() {
@@ -1359,7 +1361,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Imports a given textures library. 
+   * Imports a given textures library.
    */
   public void importTexturesLibrary(String texturesLibraryName) {
     try {
@@ -1437,7 +1439,7 @@ public class HomeController implements Controller {
    * Adds items to home and posts a paste operation to undo support.
    */
   public void paste(final List<? extends Selectable> items) {
-    // Check if pasted items and currently selected items overlap 
+    // Check if pasted items and currently selected items overlap
     List<Selectable> selectedItems = this.home.getSelectedItems();
     float pastedItemsDelta = 0;
     if (items.size() == selectedItems.size()) {
@@ -1463,7 +1465,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Adds items to home, moves them of (dx, dy) 
+   * Adds items to home, moves them of (dx, dy)
    * and posts a drop operation to undo support.
    */
   public void drop(final List<? extends Selectable> items, float dx, float dy) {
@@ -1471,7 +1473,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Adds items to home, moves them of (dx, dy) 
+   * Adds items to home, moves them of (dx, dy)
    * and posts a drop operation to undo support.
    */
   public void drop(final List<? extends Selectable> items, View destinationView, float dx, float dy) {
@@ -1499,7 +1501,7 @@ public class HomeController implements Controller {
               && this.preferences.isMagnetismEnabled()
               && items.size() == 1
               && addedFurniture.size() == 1) {
-        // Adjust piece when it's dropped in plan view  
+        // Adjust piece when it's dropped in plan view
         getPlanController().adjustMagnetizedPieceOfFurniture((HomePieceOfFurniture)items.get(0), dx, dy);
       }
       getPlanController().addItems(items);
@@ -1523,7 +1525,7 @@ public class HomeController implements Controller {
       for (HomePieceOfFurniture piece : furniture) {
         if (piece.isResizable()) {
           piece.setWidth(this.preferences.getLengthUnit().getMagnetizedLength(piece.getWidth(), 0.1f));
-          // Don't adjust depth of doors or windows otherwise they may be misplaced in a wall 
+          // Don't adjust depth of doors or windows otherwise they may be misplaced in a wall
           if (!(piece instanceof HomeDoorOrWindow) || !keepDoorsAndWindowDepth) {
             piece.setDepth(this.preferences.getLengthUnit().getMagnetizedLength(piece.getDepth(), 0.1f));
           }
@@ -1535,13 +1537,13 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Adds imported models to home, moves them of (dx, dy) 
+   * Adds imported models to home, moves them of (dx, dy)
    * and post a drop operation to undo support.
    */
   public void dropFiles(final List<String> importableModels, float dx, float dy) {
     // Always use selection mode after a drop operation
     getPlanController().setMode(PlanController.Mode.SELECTION);
-    // Add to home a listener to track imported furniture 
+    // Add to home a listener to track imported furniture
     final List<HomePieceOfFurniture> importedFurniture =
             new ArrayList<HomePieceOfFurniture>(importableModels.size());
     CollectionListener<HomePieceOfFurniture> addedFurnitureListener =
@@ -2100,7 +2102,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Updates user preferences <code>recentHomes</code> and write preferences. 
+   * Updates user preferences <code>recentHomes</code> and write preferences.
    */
   private void updateUserPreferencesRecentHomes(List<String> recentHomes) {
     if (this.application != null) {
@@ -2119,7 +2121,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Returns a list of displayable recent homes. 
+   * Returns a list of displayable recent homes.
    */
   public List<String> getRecentHomes() {
     if (this.application != null) {
@@ -2165,7 +2167,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Deletes the list of recent homes in user preferences. 
+   * Deletes the list of recent homes in user preferences.
    */
   public void deleteRecentHomes() {
     updateUserPreferencesRecentHomes(new ArrayList<String>());
@@ -2187,7 +2189,7 @@ public class HomeController implements Controller {
    * Manages home close operation. If the home managed by this controller is modified,
    * this method will {@link HomeView#confirmSave(String) confirm}
    * in view whether home should be saved. Once home is actually saved,
-   * home is removed from application homes list and <code>postCloseTask</code> 
+   * home is removed from application homes list and <code>postCloseTask</code>
    * is called if it's not <code>null</code>.
    * @since 5.0
    */
@@ -2213,7 +2215,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Saves the home managed by this controller. If home name doesn't exist, 
+   * Saves the home managed by this controller. If home name doesn't exist,
    * this method will act as {@link #saveAs() saveAs} method.
    */
   public void save() {
@@ -2221,7 +2223,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Saves the home managed by this controller and executes <code>postSaveTask</code> 
+   * Saves the home managed by this controller and executes <code>postSaveTask</code>
    * if it's not <code>null</code>.
    */
   private void save(HomeRecorder.Type recorderType, Runnable postSaveTask) {
@@ -2234,17 +2236,17 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Saves the home managed by this controller with a different name. 
-   * This method displays a {@link HomeView#showSaveDialog(String) save dialog} in  view, 
-   * and saves home with the chosen name if any. 
+   * Saves the home managed by this controller with a different name.
+   * This method displays a {@link HomeView#showSaveDialog(String) save dialog} in  view,
+   * and saves home with the chosen name if any.
    */
   public void saveAs() {
     saveAs(HomeRecorder.Type.DEFAULT, null);
   }
 
   /**
-   * Saves the home managed by this controller with a different name. 
-   * Once home is actually saved, home is removed from application homes list 
+   * Saves the home managed by this controller with a different name.
+   * Once home is actually saved, home is removed from application homes list
    * and <code>postCloseTask</code> is called if it's not <code>null</code>.
    * @since 4.4
    */
@@ -2256,7 +2258,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Saves the home managed by this controller and compresses it. If home name doesn't exist, 
+   * Saves the home managed by this controller and compresses it. If home name doesn't exist,
    * this method will prompt user to choose a home name.
    */
   public void saveAndCompress() {
@@ -2264,8 +2266,8 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Saves the home managed by this controller with a different name and compresses it. 
-   * This method displays a {@link HomeView#showSaveDialog(String) save dialog} in  view, 
+   * Saves the home managed by this controller with a different name and compresses it.
+   * This method displays a {@link HomeView#showSaveDialog(String) save dialog} in  view,
    * and saves home with the chosen name if any.
    * @since 4.2
    */
@@ -2274,7 +2276,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Actually saves the home managed by this controller and executes <code>postSaveTask</code> 
+   * Actually saves the home managed by this controller and executes <code>postSaveTask</code>
    * if it's not <code>null</code>.
    */
   private void save(final String homeName,
@@ -2291,7 +2293,7 @@ public class HomeController implements Controller {
         // Clone home to save it safely in a threaded task
         savedHome = this.home.clone();
       } catch (RuntimeException ex) {
-        // If home data is corrupted some way and couldn't be cloned 
+        // If home data is corrupted some way and couldn't be cloned
         // warn the user his home couldn't be saved
         getView().showError(preferences.getLocalizedString(
                 HomeController.class, "saveError", homeName, ex));
@@ -2338,7 +2340,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Updates the saved home and executes <code>postSaveTask</code> 
+   * Updates the saved home and executes <code>postSaveTask</code>
    * if it's not <code>null</code>.
    */
   private void updateSavedHome(final String homeName,
@@ -2575,7 +2577,7 @@ public class HomeController implements Controller {
   /**
    * Controls application exit. If any home in application homes list is modified,
    * the user will be {@link HomeView#confirmExit() prompted} in view whether he wants
-   * to discard his modifications or not.  
+   * to discard his modifications or not.
    */
   public void exit() {
     for (Home home : this.application.getHomes()) {
@@ -2604,8 +2606,8 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Displays a tip message dialog depending on the given mode and 
-   * sets the active mode of the plan controller. 
+   * Displays a tip message dialog depending on the given mode and
+   * sets the active mode of the plan controller.
    */
   public void setMode(PlanController.Mode mode) {
     if (getPlanController().getMode() != mode) {
@@ -2640,7 +2642,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Displays the wizard that helps to import home background image. 
+   * Displays the wizard that helps to import home background image.
    */
   public void importBackgroundImage() {
     new BackgroundImageWizardController(this.home, this.preferences,
@@ -2648,21 +2650,21 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Displays the wizard that helps to change home background image. 
+   * Displays the wizard that helps to change home background image.
    */
   public void modifyBackgroundImage() {
     importBackgroundImage();
   }
 
   /**
-   * Hides the home background image. 
+   * Hides the home background image.
    */
   public void hideBackgroundImage() {
     toggleBackgroundImageVisibility("undoHideBackgroundImageName");
   }
 
   /**
-   * Shows the home background image. 
+   * Shows the home background image.
    */
   public void showBackgroundImage() {
     toggleBackgroundImageVisibility("undoShowBackgroundImageName");
@@ -2717,7 +2719,7 @@ public class HomeController implements Controller {
   }
 
   /**
-   * Deletes home background image and posts and posts an undoable operation. 
+   * Deletes home background image and posts and posts an undoable operation.
    */
   public void deleteBackgroundImage() {
     final Level selectedLevel = this.home.getSelectedLevel();
@@ -2842,7 +2844,7 @@ public class HomeController implements Controller {
 
   /**
    * Controls the change of value of a visual property in home.
-   * @deprecated {@link #setVisualProperty(String, Object) setVisualProperty} should be replaced by a call to 
+   * @deprecated {@link #setVisualProperty(String, Object) setVisualProperty} should be replaced by a call to
    * {@link #setHomeProperty(String, String)} to ensure the property can be easily saved and read.
    */
   public void setVisualProperty(String propertyName,
@@ -3010,7 +3012,7 @@ public class HomeController implements Controller {
     } catch (ParserConfigurationException ex) {
       throw new SAXException(ex);
     } catch (SAXException ex) {
-      // If task was interrupted (see UpdatesHandler implementation), report the interruption 
+      // If task was interrupted (see UpdatesHandler implementation), report the interruption
       if (ex.getCause() instanceof InterruptedIOException) {
         throw (InterruptedIOException)ex.getCause();
       } else {
@@ -3153,30 +3155,30 @@ public class HomeController implements Controller {
 
   /**
    * SAX handler used to parse updates XML files.
-   * DTD used in updated files:<pre> 
+   * DTD used in updated files:<pre>
    * &lt;!ELEMENT updates (update*)>
    *
    * &lt;!ELEMENT update (downloadPage*, comment*)>
    * &lt;!ATTLIST update id CDATA #REQUIRED>
    * &lt;!ATTLIST update version CDATA #REQUIRED>
-   * &lt;!ATTLIST update operatingSystem CDATA #IMPLIED> 
+   * &lt;!ATTLIST update operatingSystem CDATA #IMPLIED>
    * &lt;!ATTLIST update date CDATA #REQUIRED>
    * &lt;!ATTLIST update minVersion CDATA #IMPLIED>
-   * &lt;!ATTLIST update maxVersion CDATA #IMPLIED> 
-   * &lt;!ATTLIST update size CDATA #IMPLIED> 
+   * &lt;!ATTLIST update maxVersion CDATA #IMPLIED>
+   * &lt;!ATTLIST update size CDATA #IMPLIED>
    * &lt;!ATTLIST update inherits CDATA #IMPLIED>
    *
    * &lt;!ELEMENT downloadPage EMPTY>
-   * &lt;!ATTLIST downloadPage url CDATA #REQUIRED> 
-   * &lt;!ATTLIST downloadPage lang CDATA #IMPLIED> 
+   * &lt;!ATTLIST downloadPage url CDATA #REQUIRED>
+   * &lt;!ATTLIST downloadPage lang CDATA #IMPLIED>
    *
    * &lt;!ELEMENT comment (#PCDATA)>
-   * &lt;!ATTLIST comment lang CDATA #IMPLIED> 
+   * &lt;!ATTLIST comment lang CDATA #IMPLIED>
    * </pre>
-   * with <code>updates</code> as root element, 
+   * with <code>updates</code> as root element,
    * <code>operatingSystem</code> an optional regular expression for the target OS,
    * <code>inherits</code> the id of an other <code>update</code> element with the same version,
-   * <code>date</code> using <code>yyyy-MM-ddThh:mm:ss<code> or <code>yyyy-MM-dd</code> format 
+   * <code>date</code> using <code>yyyy-MM-ddThh:mm:ss<code> or <code>yyyy-MM-dd</code> format
    * at GMT and <code>comment</code> element possibly containing XHTML.
    */
   private class UpdatesHandler extends DefaultHandler {
@@ -3207,8 +3209,8 @@ public class HomeController implements Controller {
     }
 
     /**
-     * Throws a <code>SAXException</code> exception initialized with a <code>InterruptedRecorderException</code> 
-     * cause if current thread is interrupted. The interrupted status of the current thread 
+     * Throws a <code>SAXException</code> exception initialized with a <code>InterruptedRecorderException</code>
+     * cause if current thread is interrupted. The interrupted status of the current thread
      * is cleared when an exception is thrown.
      */
     private void checkCurrentThreadIsntInterrupted() throws SAXException {
