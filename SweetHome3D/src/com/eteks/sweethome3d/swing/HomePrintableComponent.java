@@ -50,6 +50,7 @@ import com.eteks.sweethome3d.model.Home;
 import com.eteks.sweethome3d.model.HomePieceOfFurniture;
 import com.eteks.sweethome3d.model.HomePrint;
 import com.eteks.sweethome3d.model.LengthUnit;
+import com.eteks.sweethome3d.model.Level;
 import com.eteks.sweethome3d.viewcontroller.ContentManager;
 import com.eteks.sweethome3d.viewcontroller.HomeController;
 import com.eteks.sweethome3d.viewcontroller.PlanView;
@@ -156,14 +157,6 @@ public class HomePrintableComponent extends JComponent implements Printable {
       }
     } catch (MissingResourceException ex) {
       // No resource bundle
-    }
-
-    // Print the plan of each viewable level on its own page(s)
-    View planViewToPrint = controller.getPlanController().getView();
-    if (planViewToPrint instanceof PlanComponent) {
-      ((PlanComponent)planViewToPrint).setAllLevelsPrinted(true);
-    } else if (planViewToPrint instanceof MultipleLevelsPlanPanel) {
-      ((MultipleLevelsPlanPanel)planViewToPrint).setAllLevelsPrinted(true);
     }
   }
 
@@ -352,24 +345,20 @@ public class HomePrintableComponent extends JComponent implements Printable {
     View furnitureView = this.controller.getFurnitureController().getView();
     if (furnitureView != null
             && (homePrint == null || homePrint.isFurniturePrinted())) {
-      pageExists = ((Printable)furnitureView).print(g2D, pageFormat, page);
-      if (pageExists == PAGE_EXISTS
-              && !this.printablePages.contains(page)) {
-        this.printablePages.add(page);
-        this.furniturePageCount++;
-      }
       FurnitureTable furnitureTable = null;
       final FurnitureTable.FurnitureFilter furnitureFilter;
       if (furnitureView instanceof FurnitureTable
               && (homePrint == null
               || homePrint.isPlanPrinted()
               || homePrint.isView3DPrinted())) {
+        final Level selectedLevel = home.getSelectedLevel();
         furnitureTable = (FurnitureTable)furnitureView;
         furnitureFilter = furnitureTable.getFurnitureFilter();
         furnitureTable.setFurnitureFilter(new FurnitureTable.FurnitureFilter() {
           public boolean include(Home home, HomePieceOfFurniture piece) {
-            // Print furniture of all viewable levels because the plan of each level is printed
+            // Print only furniture at selected level when the plan or the 3D view is printed
             return (furnitureFilter == null || furnitureFilter.include(home, piece))
+                    && piece.isAtLevel(selectedLevel)
                     && (piece.getLevel() == null || piece.getLevel().isViewable());
           }
         });

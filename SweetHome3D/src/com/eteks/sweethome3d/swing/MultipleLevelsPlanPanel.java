@@ -88,16 +88,16 @@ import com.eteks.sweethome3d.viewcontroller.View;
 public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printable {
   private static final String ONE_LEVEL_PANEL_NAME = "oneLevelPanel";
   private static final String MULTIPLE_LEVELS_PANEL_NAME = "multipleLevelsPanel";
-  
+
   private static final ImageIcon sameElevationIcon = SwingTools.getScaledImageIcon(FurnitureTable.class.getResource("resources/sameElevation.png"));
-  
+
   private PlanComponent planComponent;
   private JScrollPane   planScrollPane;
   private JTabbedPane   multipleLevelsTabbedPane;
   private JPanel        oneLevelPanel;
 
-  public MultipleLevelsPlanPanel(Home home, 
-                                 UserPreferences preferences, 
+  public MultipleLevelsPlanPanel(Home home,
+                                 UserPreferences preferences,
                                  PlanController controller) {
     super(new CardLayout());
     createComponents(home, preferences, controller);
@@ -106,22 +106,15 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
   }
 
   /**
-   * Sets whether the plan of each viewable level should be printed on its own page(s).
-   */
-  public void setAllLevelsPrinted(boolean allLevelsPrinted) {
-    this.planComponent.setAllLevelsPrinted(allLevelsPrinted);
-  }
-
-  /**
    * Creates components displayed by this panel.
    */
-  private void createComponents(final Home home, 
+  private void createComponents(final Home home,
                                 final UserPreferences preferences, final PlanController controller) {
     this.planComponent = createPlanComponent(home, preferences, controller);
-    
+
     UIManager.getDefaults().put("TabbedPane.contentBorderInsets", OperatingSystem.isMacOSX()
-        ? new Insets(2, 2, 2, 2)
-        : new Insets(-1, 0, 2, 2));
+            ? new Insets(2, 2, 2, 2)
+            : new Insets(-1, 0, 2, 2));
     this.multipleLevelsTabbedPane = new JTabbedPane();
     if (OperatingSystem.isMacOSX()) {
       this.multipleLevelsTabbedPane.setBorder(new EmptyBorder(-2, -6, -7, -6));
@@ -133,86 +126,86 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
       this.planScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
       this.planScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
     }
-    
+
     createTabs(home, preferences);
     final ChangeListener changeListener = new ChangeListener() {
-        public void stateChanged(ChangeEvent ev) {
-          Component selectedComponent = multipleLevelsTabbedPane.getSelectedComponent();
-          if (selectedComponent instanceof LevelLabel) {
-            controller.setSelectedLevel(((LevelLabel)selectedComponent).getLevel());
-          }
+      public void stateChanged(ChangeEvent ev) {
+        Component selectedComponent = multipleLevelsTabbedPane.getSelectedComponent();
+        if (selectedComponent instanceof LevelLabel) {
+          controller.setSelectedLevel(((LevelLabel)selectedComponent).getLevel());
         }
-      };
+      }
+    };
     this.multipleLevelsTabbedPane.addChangeListener(changeListener);
     // Add a mouse listener that will give focus to plan component only if a change in tabbed pane comes from the mouse
     // and will add a level only if user clicks on the last tab 
     this.multipleLevelsTabbedPane.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent ev) {
-          int indexAtLocation = multipleLevelsTabbedPane.indexAtLocation(ev.getX(), ev.getY());
-          if (ev.getClickCount() == 1) {
-            if (indexAtLocation == multipleLevelsTabbedPane.getTabCount() - 1) {
-              controller.addLevel();
+      @Override
+      public void mouseClicked(MouseEvent ev) {
+        int indexAtLocation = multipleLevelsTabbedPane.indexAtLocation(ev.getX(), ev.getY());
+        if (ev.getClickCount() == 1) {
+          if (indexAtLocation == multipleLevelsTabbedPane.getTabCount() - 1) {
+            controller.addLevel();
+          }
+          final Level oldSelectedLevel = home.getSelectedLevel();
+          EventQueue.invokeLater(new Runnable() {
+            public void run() {
+              if (oldSelectedLevel == home.getSelectedLevel()) {
+                planComponent.requestFocusInWindow();
+              }
             }
-            final Level oldSelectedLevel = home.getSelectedLevel();
-            EventQueue.invokeLater(new Runnable() {
-                public void run() {
-                  if (oldSelectedLevel == home.getSelectedLevel()) {
-                    planComponent.requestFocusInWindow();
-                  }
-                }
-              });
-          } else if (indexAtLocation != -1) {
-            if (multipleLevelsTabbedPane.getSelectedIndex() == multipleLevelsTabbedPane.getTabCount() - 1) {
-              // May happen with a row of tabs is full
-              multipleLevelsTabbedPane.setSelectedIndex(multipleLevelsTabbedPane.getTabCount() - 2);
-            } 
-            controller.modifySelectedLevel();
+          });
+        } else if (indexAtLocation != -1) {
+          if (multipleLevelsTabbedPane.getSelectedIndex() == multipleLevelsTabbedPane.getTabCount() - 1) {
+            // May happen with a row of tabs is full
+            multipleLevelsTabbedPane.setSelectedIndex(multipleLevelsTabbedPane.getTabCount() - 2);
           }
+          controller.modifySelectedLevel();
         }
-      });
+      }
+    });
 
-     // Add listeners to levels to maintain tabs name and order
+    // Add listeners to levels to maintain tabs name and order
     final PropertyChangeListener levelChangeListener = new PropertyChangeListener() {
-        public void propertyChange(PropertyChangeEvent ev) {
-          if (Level.Property.NAME.name().equals(ev.getPropertyName())) {
-            int index = home.getLevels().indexOf(ev.getSource());
-            multipleLevelsTabbedPane.setTitleAt(index, (String)ev.getNewValue());
-            updateTabComponent(home, index);
-          } else if (Level.Property.VIEWABLE.name().equals(ev.getPropertyName())) {
-            updateTabComponent(home, home.getLevels().indexOf(ev.getSource()));
-          } else if (Level.Property.ELEVATION.name().equals(ev.getPropertyName())
-              || Level.Property.ELEVATION_INDEX.name().equals(ev.getPropertyName())) {
-            multipleLevelsTabbedPane.removeChangeListener(changeListener);
-            multipleLevelsTabbedPane.removeAll();
-            createTabs(home, preferences);
-            updateSelectedTab(home);
-            multipleLevelsTabbedPane.addChangeListener(changeListener);
-          }
+      public void propertyChange(PropertyChangeEvent ev) {
+        if (Level.Property.NAME.name().equals(ev.getPropertyName())) {
+          int index = home.getLevels().indexOf(ev.getSource());
+          multipleLevelsTabbedPane.setTitleAt(index, (String)ev.getNewValue());
+          updateTabComponent(home, index);
+        } else if (Level.Property.VIEWABLE.name().equals(ev.getPropertyName())) {
+          updateTabComponent(home, home.getLevels().indexOf(ev.getSource()));
+        } else if (Level.Property.ELEVATION.name().equals(ev.getPropertyName())
+                || Level.Property.ELEVATION_INDEX.name().equals(ev.getPropertyName())) {
+          multipleLevelsTabbedPane.removeChangeListener(changeListener);
+          multipleLevelsTabbedPane.removeAll();
+          createTabs(home, preferences);
+          updateSelectedTab(home);
+          multipleLevelsTabbedPane.addChangeListener(changeListener);
         }
-      };
+      }
+    };
     for (Level level : levels) {
       level.addPropertyChangeListener(levelChangeListener);
     }
     home.addLevelsListener(new CollectionListener<Level>() {
-        public void collectionChanged(CollectionEvent<Level> ev) {
-          multipleLevelsTabbedPane.removeChangeListener(changeListener);
-          switch (ev.getType()) {
-            case ADD:
-              multipleLevelsTabbedPane.insertTab(ev.getItem().getName(), null, new LevelLabel(ev.getItem()), null, ev.getIndex());
-              updateTabComponent(home, ev.getIndex());
-              ev.getItem().addPropertyChangeListener(levelChangeListener);
-              break;
-            case DELETE:
-              ev.getItem().removePropertyChangeListener(levelChangeListener);
-              multipleLevelsTabbedPane.remove(ev.getIndex());
-              break;
-          }
-          updateLayout(home);
-          multipleLevelsTabbedPane.addChangeListener(changeListener);
+      public void collectionChanged(CollectionEvent<Level> ev) {
+        multipleLevelsTabbedPane.removeChangeListener(changeListener);
+        switch (ev.getType()) {
+          case ADD:
+            multipleLevelsTabbedPane.insertTab(ev.getItem().getName(), null, new LevelLabel(ev.getItem()), null, ev.getIndex());
+            updateTabComponent(home, ev.getIndex());
+            ev.getItem().addPropertyChangeListener(levelChangeListener);
+            break;
+          case DELETE:
+            ev.getItem().removePropertyChangeListener(levelChangeListener);
+            multipleLevelsTabbedPane.remove(ev.getIndex());
+            break;
         }
-      });
-    
+        updateLayout(home);
+        multipleLevelsTabbedPane.addChangeListener(changeListener);
+      }
+    });
+
     home.addPropertyChangeListener(Home.Property.SELECTED_LEVEL, new PropertyChangeListener() {
       public void propertyChange(PropertyChangeEvent ev) {
         multipleLevelsTabbedPane.removeChangeListener(changeListener);
@@ -220,19 +213,19 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
         multipleLevelsTabbedPane.addChangeListener(changeListener);
       }
     });
-    
+
     this.oneLevelPanel = new JPanel(new BorderLayout());
-    
+
     if (OperatingSystem.isJavaVersionGreaterOrEqual("1.6")) {
       home.addPropertyChangeListener(Home.Property.ALL_LEVELS_SELECTION, new PropertyChangeListener() {
-          public void propertyChange(PropertyChangeEvent ev) {
-            multipleLevelsTabbedPane.repaint();
-          }
-        });
+        public void propertyChange(PropertyChangeEvent ev) {
+          multipleLevelsTabbedPane.repaint();
+        }
+      });
     }
-    
-    preferences.addPropertyChangeListener(UserPreferences.Property.LANGUAGE, 
-        new LanguageChangeListener(this));
+
+    preferences.addPropertyChangeListener(UserPreferences.Property.LANGUAGE,
+            new LanguageChangeListener(this));
   }
 
   /**
@@ -250,44 +243,44 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
   private void updateTabComponent(final Home home, int i) {
     if (OperatingSystem.isJavaVersionGreaterOrEqual("1.6")) {
       JLabel tabLabel = new JLabel(this.multipleLevelsTabbedPane.getTitleAt(i)) {
-          @Override
-          protected void paintComponent(Graphics g) {
-            if (home.isAllLevelsSelection() && isEnabled()) {
-              Graphics2D g2D = (Graphics2D)g;
-              // Draw text outline with half transparent selection color when all tabs are selected
-              g2D.setPaint(planComponent.getSelectionColor());
-              Composite oldComposite = g2D.getComposite();
-              g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-              g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-              Font font = getFont();
-              FontMetrics fontMetrics = getFontMetrics(font);
-              float strokeWidth = fontMetrics.getHeight() * 0.125f;
-              g2D.setStroke(new BasicStroke(strokeWidth));
-              FontRenderContext fontRenderContext = g2D.getFontRenderContext();
-              TextLayout textLayout = new TextLayout(getText(), font, fontRenderContext);
-              AffineTransform oldTransform = g2D.getTransform();
-              if (getIcon() != null) {
-                g2D.translate(getIcon().getIconWidth() + getIconTextGap(), 0);
-              }
-              g2D.draw(textLayout.getOutline(AffineTransform.getTranslateInstance(-strokeWidth / 5, 
-                  (getHeight() - fontMetrics.getHeight()) / 2 + fontMetrics.getAscent() - strokeWidth / 5)));
-              g2D.setComposite(oldComposite);
-              g2D.setTransform(oldTransform);
+        @Override
+        protected void paintComponent(Graphics g) {
+          if (home.isAllLevelsSelection() && isEnabled()) {
+            Graphics2D g2D = (Graphics2D)g;
+            // Draw text outline with half transparent selection color when all tabs are selected
+            g2D.setPaint(planComponent.getSelectionColor());
+            Composite oldComposite = g2D.getComposite();
+            g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+            Font font = getFont();
+            FontMetrics fontMetrics = getFontMetrics(font);
+            float strokeWidth = fontMetrics.getHeight() * 0.125f;
+            g2D.setStroke(new BasicStroke(strokeWidth));
+            FontRenderContext fontRenderContext = g2D.getFontRenderContext();
+            TextLayout textLayout = new TextLayout(getText(), font, fontRenderContext);
+            AffineTransform oldTransform = g2D.getTransform();
+            if (getIcon() != null) {
+              g2D.translate(getIcon().getIconWidth() + getIconTextGap(), 0);
             }
-            super.paintComponent(g);
+            g2D.draw(textLayout.getOutline(AffineTransform.getTranslateInstance(-strokeWidth / 5,
+                    (getHeight() - fontMetrics.getHeight()) / 2 + fontMetrics.getAscent() - strokeWidth / 5)));
+            g2D.setComposite(oldComposite);
+            g2D.setTransform(oldTransform);
           }
-        };
+          super.paintComponent(g);
+        }
+      };
       List<Level> levels = home.getLevels();
       tabLabel.setEnabled(levels.get(i).isViewable());
-      if (i > 0 
-          && levels.get(i - 1).getElevation() == levels.get(i).getElevation()) {
+      if (i > 0
+              && levels.get(i - 1).getElevation() == levels.get(i).getElevation()) {
         tabLabel.setIcon(sameElevationIcon);
       }
-        
+
       try {
         // Invoke dynamically Java 6 setTabComponentAt method 
         this.multipleLevelsTabbedPane.getClass().getMethod("setTabComponentAt", int.class, Component.class)
-            .invoke(this.multipleLevelsTabbedPane, i, tabLabel);
+                .invoke(this.multipleLevelsTabbedPane, i, tabLabel);
       } catch (InvocationTargetException ex) {
         throw new RuntimeException(ex);
       } catch (IllegalAccessException ex) {
@@ -308,7 +301,7 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
     public LanguageChangeListener(MultipleLevelsPlanPanel planPanel) {
       this.planPanel = new WeakReference<MultipleLevelsPlanPanel>(planPanel);
     }
-    
+
     public void propertyChange(PropertyChangeEvent ev) {
       // If help pane was garbage collected, remove this listener from preferences
       MultipleLevelsPlanPanel planPanel = this.planPanel.get();
@@ -341,7 +334,7 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
     this.multipleLevelsTabbedPane.setEnabledAt(this.multipleLevelsTabbedPane.getTabCount() - 1, false);
     this.multipleLevelsTabbedPane.setDisabledIconAt(this.multipleLevelsTabbedPane.getTabCount() - 1, newLevelIcon);
   }
-  
+
   /**
    * Selects the tab matching the selected level in <code>home</code>.
    */
@@ -380,7 +373,7 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
         // Replace plan component by a dummy label to avoid losing tab
         this.multipleLevelsTabbedPane.setComponentAt(planIndex, new LevelLabel(home.getLevels().get(planIndex)));
       }
-      this.oneLevelPanel.add(this.planScrollPane);      
+      this.oneLevelPanel.add(this.planScrollPane);
       layout.show(this, ONE_LEVEL_PANEL_NAME);
     } else {
       layout.show(this, MULTIPLE_LEVELS_PANEL_NAME);
@@ -396,7 +389,7 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
   private void layoutComponents() {
     add(this.multipleLevelsTabbedPane, MULTIPLE_LEVELS_PANEL_NAME);
     add(this.oneLevelPanel, ONE_LEVEL_PANEL_NAME);
-    
+
     SwingTools.installFocusBorder(this.planComponent);
     setFocusTraversalPolicyProvider(false);
     setMinimumSize(new Dimension());
@@ -406,65 +399,65 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
   public void setTransferHandler(TransferHandler newHandler) {
     this.planComponent.setTransferHandler(newHandler);
   }
-  
+
   @Override
   public void setComponentPopupMenu(JPopupMenu popup) {
     this.planComponent.setComponentPopupMenu(popup);
   }
-  
+
   @Override
   public void addMouseMotionListener(final MouseMotionListener l) {
     this.planComponent.addMouseMotionListener(new MouseMotionListener() {
-        public void mouseMoved(MouseEvent ev) {
-          l.mouseMoved(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
-        }
-        
-        public void mouseDragged(MouseEvent ev) {
-          l.mouseDragged(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
-        }
-      });
+      public void mouseMoved(MouseEvent ev) {
+        l.mouseMoved(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
+      }
+
+      public void mouseDragged(MouseEvent ev) {
+        l.mouseDragged(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
+      }
+    });
   }
-  
+
   @Override
   public void addMouseListener(final MouseListener l) {
     this.planComponent.addMouseListener(new MouseListener() {
-        public void mouseReleased(MouseEvent ev) {
-          l.mouseReleased(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
-        }
-        
-        public void mousePressed(MouseEvent ev) {
-          l.mousePressed(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
-        }
-        
-        public void mouseExited(MouseEvent ev) {
-          l.mouseExited(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
-        }
-        
-        public void mouseEntered(MouseEvent ev) {
-          l.mouseEntered(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
-        }
-        
-        public void mouseClicked(MouseEvent ev) {
-          l.mouseClicked(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
-        }
-      });
+      public void mouseReleased(MouseEvent ev) {
+        l.mouseReleased(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
+      }
+
+      public void mousePressed(MouseEvent ev) {
+        l.mousePressed(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
+      }
+
+      public void mouseExited(MouseEvent ev) {
+        l.mouseExited(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
+      }
+
+      public void mouseEntered(MouseEvent ev) {
+        l.mouseEntered(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
+      }
+
+      public void mouseClicked(MouseEvent ev) {
+        l.mouseClicked(SwingUtilities.convertMouseEvent(planComponent, ev, MultipleLevelsPlanPanel.this));
+      }
+    });
   }
-  
+
   @Override
   public void addFocusListener(final FocusListener l) {
     FocusListener componentFocusListener = new FocusListener() {
-        public void focusGained(FocusEvent ev) {
-          l.focusGained(new FocusEvent(MultipleLevelsPlanPanel.this, FocusEvent.FOCUS_GAINED, ev.isTemporary(), ev.getOppositeComponent()));
-        }
-        
-        public void focusLost(FocusEvent ev) {
-          l.focusLost(new FocusEvent(MultipleLevelsPlanPanel.this, FocusEvent.FOCUS_LOST, ev.isTemporary(), ev.getOppositeComponent()));
-        }
-      };
+      public void focusGained(FocusEvent ev) {
+        l.focusGained(new FocusEvent(MultipleLevelsPlanPanel.this, FocusEvent.FOCUS_GAINED, ev.isTemporary(), ev.getOppositeComponent()));
+      }
+
+      public void focusLost(FocusEvent ev) {
+        l.focusLost(new FocusEvent(MultipleLevelsPlanPanel.this, FocusEvent.FOCUS_LOST, ev.isTemporary(), ev.getOppositeComponent()));
+      }
+    };
     this.planComponent.addFocusListener(componentFocusListener);
     this.multipleLevelsTabbedPane.addFocusListener(componentFocusListener);
   }
-  
+
   /**
    * Sets rectangle selection feedback coordinates. 
    */
@@ -566,7 +559,7 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
   public void setCursor(Cursor cursor) {
     this.planComponent.setCursor(cursor);
   }
-  
+
   /**
    * Returns the cursor of this component.
    */
@@ -574,7 +567,7 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
   public Cursor getCursor() {
     return this.planComponent.getCursor();
   }
-  
+
   /**
    * Sets tool tip text displayed as feedback. 
    */
@@ -641,7 +634,7 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
   public void deleteFeedback() {
     this.planComponent.deleteFeedback();
   }
-  
+
   /**
    * Returns <code>true</code> if the given coordinates belong to the plan displayed by this component.
    */
@@ -678,7 +671,7 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
   public float getPrintPreferredScale(Graphics graphics, PageFormat pageFormat) {
     return this.planComponent.getPrintPreferredScale(graphics, pageFormat);
   }
-  
+
   /**
    * A dummy label used to track tabs matching levels.
    */
@@ -687,9 +680,9 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
 
     public LevelLabel(Level level) {
       this.level = level;
-      
+
     }
-    
+
     public Level getLevel() {
       return this.level;
     }
