@@ -106,6 +106,13 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
   }
 
   /**
+   * Sets whether the plan of each viewable level should be printed on its own page(s).
+   */
+  public void setAllLevelsPrinted(boolean allLevelsPrinted) {
+    this.planComponent.setAllLevelsPrinted(allLevelsPrinted);
+  }
+
+  /**
    * Creates components displayed by this panel.
    */
   private void createComponents(final Home home,
@@ -138,7 +145,7 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
     };
     this.multipleLevelsTabbedPane.addChangeListener(changeListener);
     // Add a mouse listener that will give focus to plan component only if a change in tabbed pane comes from the mouse
-    // and will add a level only if user clicks on the last tab 
+    // and will add a level only if user clicks on the last tab
     this.multipleLevelsTabbedPane.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent ev) {
@@ -229,7 +236,7 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
   }
 
   /**
-   * Creates and returns the main plan component displayed and layout by this component. 
+   * Creates and returns the main plan component displayed and layout by this component.
    */
   protected PlanComponent createPlanComponent(final Home home, final UserPreferences preferences,
                                               final PlanController controller) {
@@ -237,8 +244,8 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
   }
 
   /**
-   * Updates tab component with a label that will display tab text outlined by selection color 
-   * when all objects are selected at all levels. 
+   * Updates tab component with a label that will display tab text outlined by selection color
+   * when all objects are selected at all levels.
    */
   private void updateTabComponent(final Home home, int i) {
     if (OperatingSystem.isJavaVersionGreaterOrEqual("1.6")) {
@@ -278,7 +285,7 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
       }
 
       try {
-        // Invoke dynamically Java 6 setTabComponentAt method 
+        // Invoke dynamically Java 6 setTabComponentAt method
         this.multipleLevelsTabbedPane.getClass().getMethod("setTabComponentAt", int.class, Component.class)
                 .invoke(this.multipleLevelsTabbedPane, i, tabLabel);
       } catch (InvocationTargetException ex) {
@@ -293,7 +300,7 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
 
   /**
    * Preferences property listener bound to this component with a weak reference to avoid
-   * strong link between preferences and this component.  
+   * strong link between preferences and this component.
    */
   private static class LanguageChangeListener implements PropertyChangeListener {
     private WeakReference<MultipleLevelsPlanPanel> planPanel;
@@ -459,7 +466,7 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
   }
 
   /**
-   * Sets rectangle selection feedback coordinates. 
+   * Sets rectangle selection feedback coordinates.
    */
   public void setRectangleFeedback(float x0, float y0, float x1, float y1) {
     this.planComponent.setRectangleFeedback(x0, y0, x1, y1);
@@ -539,14 +546,14 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
 
   /**
    * Returns the coordinates of the bounding rectangle of the <code>text</code> displayed at
-   * the point (<code>x</code>,<code>y</code>).  
+   * the point (<code>x</code>,<code>y</code>).
    */
   public float [][] getTextBounds(String text, TextStyle style, float x, float y, float angle) {
     return this.planComponent.getTextBounds(text, style, x, y, angle);
   }
 
   /**
-   * Sets the cursor of this component. 
+   * Sets the cursor of this component.
    */
   public void setCursor(CursorType cursorType) {
     this.planComponent.setCursor(cursorType);
@@ -569,7 +576,7 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
   }
 
   /**
-   * Sets tool tip text displayed as feedback. 
+   * Sets tool tip text displayed as feedback.
    */
   public void setToolTipFeedback(String toolTipFeedback, float x, float y) {
     this.planComponent.setToolTipFeedback(toolTipFeedback, x, y);
@@ -584,15 +591,15 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
   }
 
   /**
-   * Deletes tool tip text from screen. 
+   * Deletes tool tip text from screen.
    */
   public void deleteToolTipFeedback() {
     this.planComponent.deleteToolTipFeedback();
   }
 
   /**
-   * Sets whether the resize indicator of selected wall or piece of furniture 
-   * should be visible or not. 
+   * Sets whether the resize indicator of selected wall or piece of furniture
+   * should be visible or not.
    */
   public void setResizeIndicatorVisible(boolean visible) {
     this.planComponent.setResizeIndicatorVisible(visible);
@@ -614,7 +621,7 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
   }
 
   /**
-   * Sets the feedback of dragged items drawn during a drag and drop operation, 
+   * Sets the feedback of dragged items drawn during a drag and drop operation,
    * initiated from outside of the plan displayed by this component.
    */
   public void setDraggedItemsFeedback(List<Selectable> draggedItems) {
