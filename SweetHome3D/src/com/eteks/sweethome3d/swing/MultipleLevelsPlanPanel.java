@@ -106,6 +106,13 @@ public class MultipleLevelsPlanPanel extends JPanel implements PlanView, Printab
   }
 
   /**
+   * Sets whether the plan of each viewable level should be printed on its own page(s).
+   */
+  public void setAllLevelsPrinted(boolean allLevelsPrinted) {
+    this.planComponent.setAllLevelsPrinted(allLevelsPrinted);
+  }
+
+  /**
    * Creates components displayed by this panel.
    */
   private void createComponents(final Home home, 
