@@ -352,12 +352,6 @@ public class HomePrintableComponent extends JComponent implements Printable {
     View furnitureView = this.controller.getFurnitureController().getView();
     if (furnitureView != null
             && (homePrint == null || homePrint.isFurniturePrinted())) {
-      pageExists = ((Printable)furnitureView).print(g2D, pageFormat, page);
-      if (pageExists == PAGE_EXISTS
-              && !this.printablePages.contains(page)) {
-        this.printablePages.add(page);
-        this.furniturePageCount++;
-      }
       FurnitureTable furnitureTable = null;
       final FurnitureTable.FurnitureFilter furnitureFilter;
       if (furnitureView instanceof FurnitureTable
